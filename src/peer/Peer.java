@@ -11,18 +11,22 @@ import multicast.MulticastInterface;
 
 public class Peer {
     private static String protocolVersion;
-    private static String ID;
+    private static String id;
     private static String accessPoint;
 
-    private static MulticastInterface mc, mdb, mdr;
+    public static MulticastInterface mc, mdb, mdr;
 
+
+    // Thread Pools (protocol initiation processing and received messages processing)
     private static final ThreadPoolExecutor protocolThreadPool = new ThreadPoolExecutor(
-            10, Integer.MAX_VALUE,1, TimeUnit.SECONDS, new SynchronousQueue<>());
+            10, Integer.MAX_VALUE, 1, TimeUnit.MILLISECONDS, new SynchronousQueue<>());
 
     public static void main(String[] args) {
         initPeerInfo(args);
         initRMI();
         initMulticast(args);
+
+        // TODO MAKE THEM MC THREADS
     }
 
     private static void initPeerInfo(String[] args) throws IllegalArgumentException {
@@ -30,7 +34,7 @@ public class Peer {
             throw new IllegalArgumentException();
 
         Peer.protocolVersion = args[0];
-        Peer.ID = args[1];
+        Peer.id = args[1];
         Peer.accessPoint = args[2];
     }
 
@@ -40,11 +44,11 @@ public class Peer {
             ClientInterface stub = (ClientInterface) UnicastRemoteObject.exportObject(service, 0);
             LocateRegistry.getRegistry().bind(Peer.accessPoint, stub);
         } catch (Exception e) {
-            System.err.println("Peer(" + ID + ") - RMI exception: " + e.toString());
+            System.err.println("Peer(" + id + ") - RMI exception: " + e.toString());
             e.printStackTrace();
         }
 
-        System.out.println("Peer(" + ID + ") - RMI Done");
+        System.out.println("Peer(" + id + ") - RMI Done");
     }
 
 
@@ -54,6 +58,13 @@ public class Peer {
         mdr = new MulticastInterface(args[7], Integer.parseInt(args[8]));
     }
 
+    public static synchronized String getProtocolVersion() {
+        return protocolVersion;
+    }
+
+    public static synchronized String getId() {
+        return id;
+    }
 
     public static ThreadPoolExecutor getProtocolThreadPool() {
         return protocolThreadPool;

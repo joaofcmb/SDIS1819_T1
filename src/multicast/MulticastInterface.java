@@ -1,5 +1,7 @@
 package multicast;
 
+import peer.Peer;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -25,27 +27,31 @@ public class MulticastInterface {
         }
     }
 
-    public void sendMessage(String[] header) {
-        String msg = String.join(" ", header) + CR + LF + CR + LF;
+    public synchronized void sendMessage(String[] header) {
+        byte[] msg = (String.join(" ", header) + CR + LF + CR + LF).getBytes();
 
         try {
-            s.send(new DatagramPacket(msg.getBytes(), msg.length(), group, port));
+            s.send(new DatagramPacket(msg, msg.length, group, port));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendMessage(String[] header, String body) {
-        String msg = String.join(" ", header) + CR + LF + CR + LF + body;
+    public synchronized void sendMessage(String[] header, byte[] body) {
+        byte[] headerMsg = (String.join(" ", header) + CR + LF + CR + LF).getBytes();
+
+        byte[] msg = new byte[headerMsg.length + body.length];
+        System.arraycopy(headerMsg, 0, msg,0, headerMsg.length);
+        System.arraycopy(body, 0, msg, headerMsg.length, body.length);
 
         try {
-            s.send(new DatagramPacket(msg.getBytes(), msg.length(), group, port));
+            s.send(new DatagramPacket(msg, msg.length, group, port));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public String receiveMessage(String[] header) {
+    public void receiveMessage(String[] header, byte[] body) {
         byte[] buf = new byte[64];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
         try {
@@ -59,10 +65,6 @@ public class MulticastInterface {
         String[] msgLines = msg.split("" + CR + LF);
 
         header = msgLines[0].split(" +");
-
-        if (msgLines.length > 1)
-            return msgLines[msgLines.length - 1];
-        else
-            return null;
+        body = msgLines.length > 1 ? msgLines[msgLines.length - 1].getBytes() : null;
     }
 }

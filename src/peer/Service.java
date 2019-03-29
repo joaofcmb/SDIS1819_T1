@@ -1,7 +1,5 @@
 package peer;
 
-import java.io.IOException;
-
 import client.ClientInterface;
 import storage.StorageManager;
 
@@ -11,11 +9,16 @@ public class Service implements ClientInterface {
         try {
             System.out.println("BACKUP COMMAND: " + path + " " + replicationDegree);
 
-            for (byte[] chunk : StorageManager.fileToChunks(path))
-                Peer.getProtocolThreadPool().execute(BackupInitiator);
+            byte[] fileId = StorageManager.fileId(path);
+
+            int chunkNo = 0;
+            for (byte[] chunk : StorageManager.fileToChunks(fileId))
+                Peer.getProtocolThreadPool().execute(new BackupWorker(fileId, chunk, chunkNo++, replicationDegree));
+
+            // TODO check if all chunks were backed up. If not cancel the operation
 
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return false;
         }
     }
