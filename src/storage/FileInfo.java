@@ -16,6 +16,7 @@ public class FileInfo {
 
         this.file = file;
         this.chunks = new byte[chunkNum][CHUNK_SIZE];
+        this.chunks[chunkNum - 1] = new byte[Math.toIntExact(file.length() % CHUNK_SIZE)];
         this.replication = new int[chunkNum];
 
         FileInputStream fileInput = new FileInputStream(file);

@@ -20,6 +20,10 @@ public class MulticastWorker implements Runnable {
         try {
             switch(header[0]) {
                 case "PUTCHUNK":
+                    if (header[2].equals(Peer.getId())) break;
+
+                    System.out.println(String.join("|", header));
+
                     StorageManager.storeChunk(header[3], Integer.parseInt(header[4]), Integer.parseInt(header[5]), body);
                     Thread.sleep(new Random().nextInt(401));
                     Peer.mc.sendMessage(new String[]{"STORED", header[1], header[2], header[3], header[4]});
@@ -29,7 +33,8 @@ public class MulticastWorker implements Runnable {
                     break;
             }
         } catch (InterruptedException | IOException e) {
-            System.err.println("WARNING: Message Discarded: " + header.toString());
+            e.printStackTrace();
+            System.err.println("Message Discarded: " + String.join("|", header));
         }
     }
 }

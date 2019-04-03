@@ -17,7 +17,7 @@ public class Service implements ClientInterface {
             if (StorageManager.isBackedUp(path))
                 this.delete(path);
 
-            byte[] fileId = StorageManager.fileId(path);
+            String fileId = StorageManager.fileId(path);
 
             int chunkNo = 0;
             LinkedList<Callable<Boolean>> workers = new LinkedList<>();

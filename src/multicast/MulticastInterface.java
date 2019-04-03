@@ -28,6 +28,8 @@ public class MulticastInterface {
     public synchronized void sendMessage(String[] header) {
         byte[] msg = (String.join(" ", header) + CR + LF + CR + LF).getBytes();
 
+        System.out.println("SEND: " + new String(msg));
+
         try {
             s.send(new DatagramPacket(msg, msg.length, group, port));
         } catch (IOException e) {
@@ -42,6 +44,8 @@ public class MulticastInterface {
         System.arraycopy(headerMsg, 0, msg,0, headerMsg.length);
         System.arraycopy(body, 0, msg, headerMsg.length, body.length);
 
+        System.out.println("SEND: " + new String(msg) + "X");
+
         try {
             s.send(new DatagramPacket(msg, msg.length, group, port));
         } catch (IOException e) {
@@ -50,7 +54,7 @@ public class MulticastInterface {
     }
 
     public String[][] receiveMessage() {
-        byte[] buf = new byte[64];
+        byte[] buf = new byte[64064];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
         try {
             s.receive(packet);
@@ -60,11 +64,16 @@ public class MulticastInterface {
 
         String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
 
-        String[] msgLines = msg.split("" + CR + LF);
+        System.out.println("RECV: " + msg + "X");
 
-        return new String[][] {
-                msgLines[0].split(" +"),                                             // header
-                msgLines.length > 1 ? new String[]{msgLines[msgLines.length - 1]} : null   // body
-        };
+        String[] msgLines = msg.split("" + CR + LF + CR + LF, 2);
+
+        for (String line : msgLines)
+            System.out.println("|" + line + "|");
+
+        String[] header = msgLines[0].split(" +");
+        String body = msgLines.length > 1 ? msgLines[1] : null;
+
+        return new String[][] { header, new String[]{body}};
     }
 }

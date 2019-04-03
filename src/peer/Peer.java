@@ -1,6 +1,6 @@
 package peer;
 
-import java.io.IOException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -26,33 +26,32 @@ public class Peer {
     private static final ThreadPoolExecutor multicastThreadPool = new ThreadPoolExecutor(
             8, 8, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
+        if (args.length != 9)
+            throw new IllegalArgumentException();
+
         initPeerInfo(args);
         StorageManager.storageSetup();
         initRMI();
         initMulticast(args);
+
+        System.out.println("Peer(" + id + ") online.");
     }
 
     private static void initPeerInfo(String[] args) throws IllegalArgumentException {
-        if (args.length != 9)
-            throw new IllegalArgumentException();
-
         Peer.protocolVersion = args[0];
         Peer.id = args[1];
         Peer.accessPoint = args[2];
     }
 
-    private static void initRMI() {
+    private static void initRMI() throws RemoteException {
         try {
             Service service = new Service();
             ClientInterface stub = (ClientInterface) UnicastRemoteObject.exportObject(service, 0);
-            LocateRegistry.getRegistry().bind(Peer.accessPoint, stub);
+            LocateRegistry.getRegistry().rebind(Peer.accessPoint, stub);
         } catch (Exception e) {
-            System.err.println("Peer(" + id + ") - RMI exception: " + e.toString());
-            e.printStackTrace();
+            throw e;
         }
-
-        System.out.println("Peer(" + id + ") - RMI Done");
     }
 
 
@@ -66,11 +65,11 @@ public class Peer {
         new MulticastThread(mdr).start();
     }
 
-    public static synchronized String getProtocolVersion() {
+    public static String getProtocolVersion() {
         return protocolVersion;
     }
 
-    public static synchronized String getId() {
+    public static String getId() {
         return id;
     }
 

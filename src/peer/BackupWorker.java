@@ -10,10 +10,11 @@ public class BackupWorker implements Callable<Boolean> {
     private final String protocolVersion = Peer.getProtocolVersion();
     private final String id = Peer.getId();
 
-    private final byte[] fileId, chunk;
+    private final String fileId;
+    private final byte[] chunk;
     private final int chunkNo, replicationDegree;
 
-    BackupWorker(byte[] fileId, byte[] chunk, int chunkNo, int replicationDegree) {
+    BackupWorker(String fileId, byte[] chunk, int chunkNo, int replicationDegree) {
         this.fileId = fileId;
         this.chunk = chunk;
         this.chunkNo = chunkNo;
