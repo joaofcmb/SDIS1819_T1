@@ -1,13 +1,17 @@
 package peer;
 
+import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import client.ClientInterface;
 import multicast.MulticastInterface;
+import multicast.MulticastThread;
+import storage.StorageManager;
 
 public class Peer {
     private static String protocolVersion;
@@ -16,17 +20,17 @@ public class Peer {
 
     public static MulticastInterface mc, mdb, mdr;
 
-
-    // Thread Pools (protocol initiation processing and received messages processing)
     private static final ThreadPoolExecutor protocolThreadPool = new ThreadPoolExecutor(
-            10, Integer.MAX_VALUE, 1, TimeUnit.MILLISECONDS, new SynchronousQueue<>());
+            10, Integer.MAX_VALUE, 15, TimeUnit.SECONDS, new SynchronousQueue<>());
+
+    private static final ThreadPoolExecutor multicastThreadPool = new ThreadPoolExecutor(
+            8, 8, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
     public static void main(String[] args) {
         initPeerInfo(args);
+        StorageManager.storageSetup();
         initRMI();
         initMulticast(args);
-
-        // TODO MAKE THEM MC THREADS
     }
 
     private static void initPeerInfo(String[] args) throws IllegalArgumentException {
@@ -56,6 +60,10 @@ public class Peer {
         mc = new MulticastInterface(args[3], Integer.parseInt(args[4]));
         mdb = new MulticastInterface(args[5], Integer.parseInt(args[6]));
         mdr = new MulticastInterface(args[7], Integer.parseInt(args[8]));
+
+        new MulticastThread(mc).start();
+        new MulticastThread(mdb).start();
+        new MulticastThread(mdr).start();
     }
 
     public static synchronized String getProtocolVersion() {
@@ -68,5 +76,9 @@ public class Peer {
 
     public static ThreadPoolExecutor getProtocolThreadPool() {
         return protocolThreadPool;
+    }
+
+    public static ThreadPoolExecutor getMulticastThreadPool() {
+        return multicastThreadPool;
     }
 }

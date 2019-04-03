@@ -1,7 +1,5 @@
 package multicast;
 
-import peer.Peer;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -51,7 +49,7 @@ public class MulticastInterface {
         }
     }
 
-    public void receiveMessage(String[] header, byte[] body) {
+    public String[][] receiveMessage() {
         byte[] buf = new byte[64];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
         try {
@@ -64,7 +62,9 @@ public class MulticastInterface {
 
         String[] msgLines = msg.split("" + CR + LF);
 
-        header = msgLines[0].split(" +");
-        body = msgLines.length > 1 ? msgLines[msgLines.length - 1].getBytes() : null;
+        return new String[][] {
+                msgLines[0].split(" +"),                                             // header
+                msgLines.length > 1 ? new String[]{msgLines[msgLines.length - 1]} : null   // body
+        };
     }
 }

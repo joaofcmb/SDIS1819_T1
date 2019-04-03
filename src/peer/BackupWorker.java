@@ -1,6 +1,10 @@
 package peer;
 
-public class BackupWorker implements Runnable {
+import storage.StorageManager;
+
+import java.util.concurrent.Callable;
+
+public class BackupWorker implements Callable<Boolean> {
     private final int INIT_WAIT_TIME = 1000, TIMEOUT_THRESHOLD = 5;
 
     private final String protocolVersion = Peer.getProtocolVersion();
@@ -17,7 +21,7 @@ public class BackupWorker implements Runnable {
     }
 
     @Override
-    public void run() {
+    public Boolean call() {
         int waitTime = INIT_WAIT_TIME, timeoutCounter = 0;
         String[] header = new String[]{"PUTCHUNK", protocolVersion, id, new String(fileId),
                 String.valueOf(chunkNo), String.valueOf(replicationDegree)};
@@ -25,14 +29,17 @@ public class BackupWorker implements Runnable {
             Peer.mdb.sendMessage(header, chunk);
 
             try {
-                Thread.sleep(INIT_WAIT_TIME);
+                Thread.sleep(waitTime);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
 
-            // TODO check if replicationDegree was met and terminate properly in that case
+            if (StorageManager.getChunkReplication(fileId, chunkNo) >= this.replicationDegree)
+                return true;
 
-            timeoutCounter *= 2;
-        } while(timeoutCounter < TIMEOUT_THRESHOLD);
+            waitTime *= 2;
+        } while(++timeoutCounter < TIMEOUT_THRESHOLD);
+
+        return false;
     }
 }

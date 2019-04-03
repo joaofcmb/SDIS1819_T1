@@ -3,19 +3,34 @@ package peer;
 import client.ClientInterface;
 import storage.StorageManager;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+
 public class Service implements ClientInterface {
     @Override
     public boolean backup(String path, int replicationDegree) {
         try {
             System.out.println("BACKUP COMMAND: " + path + " " + replicationDegree);
 
+            if (StorageManager.isBackedUp(path))
+                this.delete(path);
+
             byte[] fileId = StorageManager.fileId(path);
 
             int chunkNo = 0;
+            LinkedList<Callable<Boolean>> workers = new LinkedList<>();
             for (byte[] chunk : StorageManager.fileToChunks(fileId))
-                Peer.getProtocolThreadPool().execute(new BackupWorker(fileId, chunk, chunkNo++, replicationDegree));
+                workers.add(new BackupWorker(fileId, chunk, chunkNo++, replicationDegree));
 
-            // TODO check if all chunks were backed up. If not cancel the operation
+            List<Future<Boolean>> resultList = Peer.getProtocolThreadPool().invokeAll(workers);
+
+            for (Future<Boolean> result : resultList)
+                if (!result.get()) {
+                    System.out.println("ERROR: Backup protocol failed. The Operation was canceled");
+                    throw new Exception();
+                }
 
             return true;
         } catch (Exception e) {

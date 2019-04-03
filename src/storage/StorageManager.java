@@ -1,40 +1,91 @@
 package storage;
 
+import peer.Peer;
+
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class StorageManager {
-    private static final int CHUNK_SIZE = 64000;
+    private static final ConcurrentHashMap<String, byte[]> idMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<byte[], FileInfo> fileMap = new ConcurrentHashMap<>();
 
-    private static final HashMap<byte[], FileInfo> fileMap = new HashMap<>();
+    public static void storageSetup() {
+        // TODO try getting rid of this
+        new File("./peer" + Peer.getId() + "/backup").mkdirs();
+        new File("./peer" + Peer.getId() + "/restored").mkdir();
+    }
 
-    public static byte[] fileId(String path) throws NoSuchAlgorithmException {
+    public static boolean isBackedUp(String path) {
+        return idMap.containsKey(new File(path).getAbsolutePath());
+    }
+
+    public static byte[] fileId(String path) throws NoSuchAlgorithmException, IOException {
         File file = new File(path);
         MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
 
-        byte[] fileId = sha256.digest((file.getName() + file.length() + file.lastModified()).getBytes(StandardCharsets.UTF_8));
+        byte[] fileId = sha256.digest((file.getAbsolutePath() + file.length() + file.lastModified()).getBytes(StandardCharsets.UTF_8));
 
-        if (fileMap.get(fileId) == null)
-            fileMap.put(fileId, new FileInfo(path));
+        idMap.put(file.getAbsolutePath(), fileId);
+        fileMap.put(fileId, new FileInfo(file));
 
         return fileId;
     }
 
-    public static byte[][] fileToChunks(byte[] fileId) throws IOException {
-        File file = fileMap.get(fileId).getFile();
-        
-        FileInputStream fileInput = new FileInputStream(file);
+    public static byte[][] fileToChunks(byte[] fileId) {
+        return fileMap.get(fileId).getChunks();
+    }
 
-        byte[][] chunks = new byte[Math.toIntExact(file.length() / CHUNK_SIZE + 1)][CHUNK_SIZE];
+    public static synchronized void storeChunk(String fileId, int chunkNo, int replicationDegree, String body) throws IOException {
+        File chunkFile = new File("./peer" + Peer.getId() + "/backup/" + fileId + "/chk" + chunkNo);
+        chunkFile.getParentFile().mkdir();
 
-        for (byte[] chunk : chunks)
-            fileInput.read(chunk);
+        if (!chunkFile.exists()) {
+            chunkFile.createNewFile();
 
-        return chunks;
+            FileOutputStream out = new FileOutputStream(chunkFile);
+            out.write(body.getBytes());
+            out.close();
+
+            File infoFile = new File("./peer" + Peer.getId() + "/info/" + fileId + "/chk" + chunkNo);
+            infoFile.createNewFile();
+
+            PrintWriter printer = new PrintWriter(infoFile);
+            printer.println(replicationDegree - 1);
+            printer.close();
+        }
+    }
+
+    public static synchronized void signalStoreChunk(String fileId, int chunkNo) {
+        if (fileMap.containsKey(fileId)) {
+            fileMap.get(fileId).incReplication(chunkNo);
+        }
+        else {
+            try {
+                File infoFile = new File("./peer" + Peer.getId() + "/info/" + fileId + "/chk" + chunkNo);
+
+                if (infoFile.exists()) {
+                    Scanner in = new Scanner(infoFile);
+                    PrintWriter printer = new PrintWriter(infoFile);
+
+                    printer.println(in.nextInt() - 1);
+                    in.close();
+                    printer.close();
+                }
+
+            } catch (IOException e) {
+                System.err.println("WARNING: Failed to write to backupInfo.txt");
+            }
+        }
+    }
+
+    public static int getChunkReplication(byte[] fileId, int chunkNo) {
+            return fileMap.containsKey(fileId) ? fileMap.get(fileId).getReplication(chunkNo) : -1;
     }
 }
