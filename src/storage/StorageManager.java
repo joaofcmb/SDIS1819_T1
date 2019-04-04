@@ -43,8 +43,7 @@ public class StorageManager {
         return fileMap.get(fileId).getChunks();
     }
 
-    public static void storeChunk(String fileId, int chunkNo, int replicationDegree, String body) throws IOException {
-
+    public static void storeChunk(String fileId, int chunkNo, int replicationDegree, byte[] body) throws IOException {
         if (!chunkMap.containsKey(fileId + chunkNo)) {
             chunkMap.put(fileId + chunkNo, new ChunkInfo(fileId, chunkNo, replicationDegree, body));
         }

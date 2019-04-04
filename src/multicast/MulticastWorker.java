@@ -4,15 +4,19 @@ import peer.Peer;
 import storage.StorageManager;
 
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.Random;
 
 public class MulticastWorker implements Runnable {
     private String[] header;
-    private String body;
+    private byte[] body;
 
-    MulticastWorker(String[][] msg) {
-        this.header = msg[0];
-        this.body = msg[1] != null ? msg[1][0] : null;
+    MulticastWorker(AbstractMap.SimpleImmutableEntry<String[], byte[]> msg) {
+        this.header = msg.getKey();
+        this.body = msg.getValue();
+
+        System.out.println("->" + Arrays.toString(header));
     }
 
     @Override

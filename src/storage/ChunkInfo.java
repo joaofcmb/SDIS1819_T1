@@ -12,7 +12,7 @@ public class ChunkInfo {
     private final File chunkFile;
     private final File infoFile;
 
-    public ChunkInfo(String fileId, int chunkNo, int replicationDegree, String body) throws IOException {
+    public ChunkInfo(String fileId, int chunkNo, int replicationDegree, byte[] body) throws IOException {
         this.chunkFile = new File("./peer" + Peer.getId() + "/backup/" + fileId + "/chk" + chunkNo);
         this.chunkFile.getParentFile().mkdirs();
         this.chunkFile.createNewFile();
@@ -21,9 +21,9 @@ public class ChunkInfo {
         this.infoFile.getParentFile().mkdirs();
         this.infoFile.createNewFile();
 
-        FileOutputStream out = new FileOutputStream(chunkFile);
-        out.write(body.getBytes());
-        out.close();
+        try (FileOutputStream fos = new FileOutputStream(chunkFile)) {
+            fos.write(body);
+        }
 
         synchronized (infoFile) {
             // The file keeps track of necessary replication to fulfill replicationDegree (<=0 means it's fulfilled)

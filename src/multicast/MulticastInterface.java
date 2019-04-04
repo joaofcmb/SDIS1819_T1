@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.AbstractMap;
 
 public class MulticastInterface {
     private InetAddress group;
@@ -28,8 +29,6 @@ public class MulticastInterface {
     public synchronized void sendMessage(String[] header) {
         byte[] msg = (String.join(" ", header) + CR + LF + CR + LF).getBytes();
 
-        System.out.println("SEND: " + new String(msg));
-
         try {
             s.send(new DatagramPacket(msg, msg.length, group, port));
         } catch (IOException e) {
@@ -44,8 +43,6 @@ public class MulticastInterface {
         System.arraycopy(headerMsg, 0, msg,0, headerMsg.length);
         System.arraycopy(body, 0, msg, headerMsg.length, body.length);
 
-        System.out.println("SEND: " + new String(msg) + "X");
-
         try {
             s.send(new DatagramPacket(msg, msg.length, group, port));
         } catch (IOException e) {
@@ -53,7 +50,7 @@ public class MulticastInterface {
         }
     }
 
-    public String[][] receiveMessage() {
+    public AbstractMap.SimpleImmutableEntry<String[], byte[]> receiveMessage() {
         byte[] buf = new byte[64064];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
         try {
@@ -64,16 +61,29 @@ public class MulticastInterface {
 
         String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
 
-        System.out.println("RECV: " + msg + "X");
+        return decodeMessage(packet.getData(), packet.getLength());
+    }
 
-        String[] msgLines = msg.split("" + CR + LF + CR + LF, 2);
+    private AbstractMap.SimpleImmutableEntry<String[], byte[]> decodeMessage(byte[] data, int length) {
+        for (int i = 0; i < length - 4; i++) {
+            if (data[i] == CR && data[i+1] == LF && data[i+2] == CR && data[i+3] == LF) {
+                byte[] header = new byte[i];
+                byte[] body = new byte[length - i - 4];
 
-        for (String line : msgLines)
-            System.out.println("|" + line + "|");
+                System.arraycopy(data, 0, header, 0, header.length);
+                System.arraycopy(data, i + 4, body, 0, body.length);
 
-        String[] header = msgLines[0].split(" +");
-        String body = msgLines.length > 1 ? msgLines[1] : null;
+                return new AbstractMap.SimpleImmutableEntry<>(
+                        new String(header).split(" +"),
+                        body
+                );
+            }
 
-        return new String[][] { header, new String[]{body}};
+        }
+
+        return new AbstractMap.SimpleImmutableEntry<>(
+                new String(data, 0, length - 4).split(" +"),
+                null
+        );
     }
 }
