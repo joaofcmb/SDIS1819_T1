@@ -32,6 +32,7 @@ public class Service implements ClientInterface {
                     throw new Exception();
                 }
 
+            System.out.println("Backup protocol for \"" + path + "\" successful.");
             return true;
         } catch (Exception e) {
             return false;

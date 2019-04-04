@@ -33,7 +33,6 @@ public class MulticastWorker implements Runnable {
                     break;
             }
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
             System.err.println("Message Discarded: " + String.join("|", header));
         }
     }
