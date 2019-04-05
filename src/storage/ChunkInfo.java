@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+// TODO keep track of peers who stored chunk to avoid incrementing replication on duplicate stored messages from multiple backups of same file in different peers
+
 public class ChunkInfo {
     private final File chunkFile;
     private final File infoFile;

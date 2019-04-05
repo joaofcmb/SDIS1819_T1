@@ -59,8 +59,6 @@ public class MulticastInterface {
             e.printStackTrace();
         }
 
-        String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
-
         return decodeMessage(packet.getData(), packet.getLength());
     }
 

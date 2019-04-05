@@ -12,7 +12,10 @@ public class TestApp {
 
             switch(args[1]) {
                 case "BACKUP":
-                    stub.backup(args[2], Integer.parseInt(args[3]));
+                    if (stub.backup(args[2], Integer.parseInt(args[3])))
+                        System.out.println("Backup protocol for \"" + args[3] + "\" successful.");
+                    else
+                        System.out.println("ERROR: Backup protocol aborted.");
                     break;
                 case "RESTORE":
                     stub.restore(args[2]);
