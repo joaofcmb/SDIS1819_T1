@@ -24,7 +24,7 @@ public class BackupWorker implements Callable<Boolean> {
     @Override
     public Boolean call() {
         int waitTime = INIT_WAIT_TIME, timeoutCounter = 0;
-        String[] header = new String[]{"PUTCHUNK", protocolVersion, id, new String(fileId),
+        String[] header = new String[]{"PUTCHUNK", protocolVersion, id, fileId,
                 String.valueOf(chunkNo), String.valueOf(replicationDegree)};
         do {
             Peer.mdb.sendMessage(header, chunk);

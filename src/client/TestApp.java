@@ -10,15 +10,18 @@ public class TestApp {
             Registry registry = LocateRegistry.getRegistry();
             ClientInterface stub = (ClientInterface) registry.lookup(args[0]);
 
-            switch(args[1]) {
+            switch (args[1]) {
                 case "BACKUP":
                     if (stub.backup(args[2], Integer.parseInt(args[3])))
-                        System.out.println("Backup protocol for \"" + args[3] + "\" successful.");
+                        System.out.println("Backup protocol for \"" + args[2] + "\" successful.");
                     else
-                        System.out.println("ERROR: Backup protocol aborted.");
+                        System.out.println("ERROR: Backup protocol ended. Replication degree not fully met");
                     break;
                 case "RESTORE":
-                    stub.restore(args[2]);
+                    if (stub.restore(args[2]))
+                        System.out.println("Restore protocol for \"" + args[2] + "\" successful.");
+                    else
+                        System.out.println("ERROR: Restore protocol failed.");
                     break;
                 case "DELETE":
                     stub.delete(args[2]);

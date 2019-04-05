@@ -3,6 +3,7 @@ package peer;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -20,8 +21,11 @@ public class Peer {
 
     public static MulticastInterface mc, mdb, mdr;
 
-    private static final ThreadPoolExecutor protocolThreadPool = new ThreadPoolExecutor(
-            10, Integer.MAX_VALUE, 15, TimeUnit.SECONDS, new SynchronousQueue<>());
+    private static final ThreadPoolExecutor backupThreadPool = new ThreadPoolExecutor(
+            5, Integer.MAX_VALUE, 5, TimeUnit.SECONDS, new SynchronousQueue<>());
+
+    private static final ThreadPoolExecutor restoreThreadPool = new ThreadPoolExecutor(
+            5, Integer.MAX_VALUE, 5, TimeUnit.SECONDS, new SynchronousQueue<>());
 
     private static final ThreadPoolExecutor multicastThreadPool = new ThreadPoolExecutor(
             8, 8, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
@@ -45,13 +49,9 @@ public class Peer {
     }
 
     private static void initRMI() throws RemoteException {
-        try {
-            Service service = new Service();
-            ClientInterface stub = (ClientInterface) UnicastRemoteObject.exportObject(service, 0);
-            LocateRegistry.getRegistry().rebind(Peer.accessPoint, stub);
-        } catch (Exception e) {
-            throw e;
-        }
+        Service service = new Service();
+        ClientInterface stub = (ClientInterface) UnicastRemoteObject.exportObject(service, 0);
+        LocateRegistry.getRegistry().rebind(Peer.accessPoint, stub);
     }
 
 
@@ -73,11 +73,15 @@ public class Peer {
         return id;
     }
 
-    public static ThreadPoolExecutor getProtocolThreadPool() {
-        return protocolThreadPool;
+    public static ThreadPoolExecutor getBackupThreadPool() {
+        return backupThreadPool;
     }
 
     public static ThreadPoolExecutor getMulticastThreadPool() {
         return multicastThreadPool;
+    }
+
+    public static ThreadPoolExecutor getRestoreThreadPool() {
+        return restoreThreadPool;
     }
 }

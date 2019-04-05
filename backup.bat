@@ -6,5 +6,3 @@ set FILE-PATH=%2
 set REPLICATION=%3
 
 java --class-path %CLASS-PATH% %TESTAPP-MAIN% "accesspoint%PEER-ID%" "BACKUP" %FILE-PATH% %REPLICATION%
-
-pause

@@ -3,6 +3,8 @@ package storage;
 import peer.Peer;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,8 +25,10 @@ public class ChunkInfo {
         this.infoFile.getParentFile().mkdirs();
         this.infoFile.createNewFile();
 
-        try (FileOutputStream fos = new FileOutputStream(chunkFile)) {
-            fos.write(body);
+        synchronized (chunkFile) {
+            try (FileOutputStream fos = new FileOutputStream(chunkFile)) {
+                fos.write(body);
+            }
         }
 
         synchronized (infoFile) {
@@ -45,6 +49,16 @@ public class ChunkInfo {
 
             try (PrintWriter pw = new PrintWriter(infoFile)) {
                 pw.println(necessaryReplication - 1);
+            }
+        }
+    }
+
+    public byte[] getChunk() throws IOException {
+        synchronized (chunkFile) {
+            try (FileInputStream fis = new FileInputStream(chunkFile)) {
+                byte[] body = new byte[Math.toIntExact(chunkFile.length())];
+                fis.read(body);
+                return body;
             }
         }
     }
