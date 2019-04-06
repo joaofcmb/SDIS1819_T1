@@ -27,7 +27,9 @@ public class MulticastWorker implements Runnable {
     @Override
     public void run() {
         try {
-            int chunkNo = Integer.parseInt(header[4]);
+            int chunkNo = 0;
+            if (header.length > 4)
+                chunkNo = Integer.parseInt(header[4]);
 
             switch(header[0]) {
                 case "PUTCHUNK":
@@ -41,11 +43,9 @@ public class MulticastWorker implements Runnable {
                     header[2] = Peer.getId();
                     Peer.mc.sendMessage(header);
                     break;
-
                 case "STORED":
                     StorageManager.signalStoreChunk(header[3], chunkNo);
                     break;
-
                 case "GETCHUNK":
                     if (StorageManager.hasChunk(header[3], chunkNo)) {
                         RestoreManager.markChunk(header[3], chunkNo);
@@ -59,7 +59,8 @@ public class MulticastWorker implements Runnable {
                         }
                     }
                     break;
-
+                case "DELETE":
+                    StorageManager.deleteChunks(header[3]);
                 case "CHUNK":
                     RestoreManager.unMarkChunk(header[3], chunkNo);
                     RestoreManager.putChunk(header[3], chunkNo, body);

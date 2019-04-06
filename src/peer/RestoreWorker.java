@@ -5,7 +5,7 @@ import storage.RestoreManager;
 import java.util.concurrent.Callable;
 
 public class RestoreWorker implements Callable<byte[]> {
-    private final int WAIT_TIME = 2000;
+    private final int INIT_WAIT_TIME = 1000;
 
     private final String protocolVersion = Peer.getProtocolVersion();
     private final String id = Peer.getId();
@@ -20,16 +20,24 @@ public class RestoreWorker implements Callable<byte[]> {
 
     @Override
     public byte[] call() {
-        RestoreManager.addChunk(fileId, chunkNo);
+        int waitTime = INIT_WAIT_TIME;
+        byte[] chunk = null;
 
         Peer.mc.sendMessage(new String[] {"GETCHUNK", protocolVersion, id, fileId, String.valueOf(chunkNo)} );
 
-        try {
-            Thread.sleep(WAIT_TIME);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        while(chunk == null) {
+            RestoreManager.addChunk(fileId, chunkNo);
+
+            try {
+                Thread.sleep(waitTime);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
+            chunk = RestoreManager.retrieveChunk(fileId, chunkNo);
+            waitTime *= 2;
         }
 
-        return RestoreManager.retrieveChunk(fileId, chunkNo);
+        return chunk;
     }
 }

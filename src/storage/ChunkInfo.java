@@ -62,4 +62,8 @@ public class ChunkInfo {
             }
         }
     }
+
+    public boolean delete() {
+        return this.chunkFile.delete() && this.infoFile.delete();
+    }
 }

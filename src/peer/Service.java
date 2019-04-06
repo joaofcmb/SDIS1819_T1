@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 // TODO use exception throwing on RMI for better error display for client
 
@@ -30,13 +31,7 @@ public class Service implements ClientInterface {
             List<Future<Boolean>> resultList = Peer.getBackupThreadPool().invokeAll(workers);
 
             for (Future<Boolean> result : resultList) {
-                //if (!result.get()) throw new Exception();
-                try {
-                    boolean b = result.get();
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
+                if (!result.get()) throw new Exception();
             }
 
             System.out.println("Backup protocol for \"" + path + "\" successful.");
@@ -62,7 +57,8 @@ public class Service implements ClientInterface {
             for (int chunkNo = 0; chunkNo < chunkNum; chunkNo++)
                 workers.add(new RestoreWorker(fileId, chunkNo));
 
-            List<Future<byte[]>> resultList = Peer.getRestoreThreadPool().invokeAll(workers);
+            List<Future<byte[]>> resultList = Peer.getRestoreThreadPool().invokeAll(workers,
+                    30, TimeUnit.SECONDS);
 
             byte[][] chunks = new byte[chunkNum][];
             for (int i = 0; i < chunkNum; i++) {
@@ -77,7 +73,7 @@ public class Service implements ClientInterface {
             return true;
         }
         catch(Exception e) {
-            System.out.println("ERROR: Restore protocol failed. The Operation was canceled");
+            System.out.println("ERROR: Restore protocol failed. The Operation wasn't fully successful");
             return false;
         }
     }
@@ -85,7 +81,21 @@ public class Service implements ClientInterface {
     @Override
     public boolean delete(String path) {
         System.out.println("DELETE COMMAND: " + path);
-        return false;
+
+        try {
+            String fileId = StorageManager.getFileId(path);
+            if (fileId == null)
+                throw new FileNotFoundException();
+
+            Peer.mc.sendMessage(new String[] {"DELETE", Peer.getProtocolVersion(), Peer.getId(), fileId} );
+
+            System.out.println("Delete protocol for \"" + path + "\" successful.");
+            return true;
+        }
+        catch (Exception e) {
+            System.out.println("ERROR: Deletion protocol failed.");
+            return false;
+        }
     }
 
     @Override
