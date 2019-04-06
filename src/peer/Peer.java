@@ -35,9 +35,9 @@ public class Peer {
             throw new IllegalArgumentException();
 
         initPeerInfo(args);
-        StorageManager.storageSetup();
         initRMI();
         initMulticast(args);
+        StorageManager.storageSetup();
 
         System.out.println("Peer(" + id + ") online.");
     }

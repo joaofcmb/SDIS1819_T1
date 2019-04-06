@@ -51,7 +51,7 @@ public class MulticastInterface {
     }
 
     public AbstractMap.SimpleImmutableEntry<String[], byte[]> receiveMessage() {
-        byte[] buf = new byte[64064];
+        byte[] buf = new byte[65000];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
         try {
             s.receive(packet);

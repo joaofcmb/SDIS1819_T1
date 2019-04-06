@@ -1,6 +1,6 @@
 package peer;
 
-import multicast.MulticastWorker;
+import storage.RestoreManager;
 
 import java.util.concurrent.Callable;
 
@@ -20,6 +20,8 @@ public class RestoreWorker implements Callable<byte[]> {
 
     @Override
     public byte[] call() {
+        RestoreManager.addChunk(fileId, chunkNo);
+
         Peer.mc.sendMessage(new String[] {"GETCHUNK", protocolVersion, id, fileId, String.valueOf(chunkNo)} );
 
         try {
@@ -28,6 +30,6 @@ public class RestoreWorker implements Callable<byte[]> {
             Thread.currentThread().interrupt();
         }
 
-        return MulticastWorker.retrieveChunk(fileId, chunkNo);
+        return RestoreManager.retrieveChunk(fileId, chunkNo);
     }
 }

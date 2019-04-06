@@ -3,12 +3,13 @@ package peer;
 import client.ClientInterface;
 import storage.StorageManager;
 
-import java.nio.file.attribute.FileStoreAttributeView;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+
+// TODO use exception throwing on RMI for better error display for client
 
 public class Service implements ClientInterface {
     @Override
@@ -28,8 +29,15 @@ public class Service implements ClientInterface {
 
             List<Future<Boolean>> resultList = Peer.getBackupThreadPool().invokeAll(workers);
 
-            for (Future<Boolean> result : resultList)
-                if (!result.get()) throw new Exception();
+            for (Future<Boolean> result : resultList) {
+                //if (!result.get()) throw new Exception();
+                try {
+                    boolean b = result.get();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
             System.out.println("Backup protocol for \"" + path + "\" successful.");
             return true;
@@ -46,7 +54,7 @@ public class Service implements ClientInterface {
         try {
             String fileId = StorageManager.getFileId(path);
             if (fileId == null)
-                throw new Exception();
+                throw new FileNotFoundException();
 
             int chunkNum = StorageManager.getChunkNum(fileId);
 

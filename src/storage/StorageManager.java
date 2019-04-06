@@ -2,13 +2,17 @@ package storage;
 
 import peer.Peer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.FileAlreadyExistsException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StorageManager {
@@ -16,9 +20,10 @@ public class StorageManager {
     private static final ConcurrentHashMap<String, FileInfo> fileMap = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, ChunkInfo> chunkMap = new ConcurrentHashMap<>();
 
+    private static final File restoreDirectory = new File("./peer" + Peer.getId() + "/restored");
+
     public static void storageSetup() {
-        // TODO try getting rid of this
-        new File("./peer" + Peer.getId() + "/restored").mkdirs();
+        restoreDirectory.mkdirs();
         new File("./peer" + Peer.getId() + "/backup").mkdir();
         new File("./peer" + Peer.getId() + "/info").mkdir();
     }
@@ -44,9 +49,8 @@ public class StorageManager {
         return idMap.get(new File(path).getAbsolutePath());
     }
 
-
     public static synchronized void restoreFile(String path, byte[][] chunks) throws IOException {
-        File file = new File("./peer" + Peer.getId() + "/restored/" + new File(path).getName());
+        File file = new File(restoreDirectory, new File(path).getName());
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
             for (byte[] chunk : chunks) {
@@ -60,9 +64,7 @@ public class StorageManager {
     }
 
     public static void storeChunk(String fileId, int chunkNo, int replicationDegree, byte[] body) throws IOException {
-        if (!chunkMap.containsKey(fileId + chunkNo)) {
-            chunkMap.put(fileId + chunkNo, new ChunkInfo(fileId, chunkNo, replicationDegree, body));
-        }
+        chunkMap.putIfAbsent(fileId + chunkNo, new ChunkInfo(fileId, chunkNo, replicationDegree, body));
     }
 
     public static void signalStoreChunk(String fileId, int chunkNo) throws IOException {

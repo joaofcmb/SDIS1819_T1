@@ -15,7 +15,7 @@ public class TestApp {
                     if (stub.backup(args[2], Integer.parseInt(args[3])))
                         System.out.println("Backup protocol for \"" + args[2] + "\" successful.");
                     else
-                        System.out.println("ERROR: Backup protocol ended. Replication degree not fully met");
+                        System.out.println("WARNING: Backup protocol ended. Replication degree not fully met");
                     break;
                 case "RESTORE":
                     if (stub.restore(args[2]))
