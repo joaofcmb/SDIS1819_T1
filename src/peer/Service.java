@@ -4,6 +4,7 @@ import client.ClientInterface;
 import storage.StorageManager;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -21,7 +22,7 @@ public class Service implements ClientInterface {
             if (StorageManager.isBackedUp(path))
                 this.delete(path);
 
-            String fileId = StorageManager.generateFileId(path);
+            String fileId = StorageManager.generateFileId(path, replicationDegree);
 
             int chunkNo = 0;
             LinkedList<Callable<Boolean>> workers = new LinkedList<>();
@@ -71,8 +72,7 @@ public class Service implements ClientInterface {
 
             System.out.println("Restore protocol for \"" + path + "\" successful.");
             return true;
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             System.out.println("ERROR: Restore protocol failed. The Operation wasn't fully successful");
             return false;
         }
@@ -91,8 +91,7 @@ public class Service implements ClientInterface {
 
             System.out.println("Delete protocol for \"" + path + "\" successful.");
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("ERROR: Deletion protocol failed.");
             return false;
         }
@@ -105,9 +104,16 @@ public class Service implements ClientInterface {
     }
 
     @Override
-    public boolean state() {
+    public String state() {
         System.out.println("STATE COMMAND");
-        return false;
+
+        try {
+            System.out.println("State retrieval successful");
+            return StorageManager.getState();
+        } catch (IOException e) {
+            System.out.println("ERROR: State retrieval failed.");
+            return null;
+        }
     }
 
 }

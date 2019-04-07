@@ -13,31 +13,37 @@ public class TestApp {
             switch (args[1]) {
                 case "BACKUP":
                     if (stub.backup(args[2], Integer.parseInt(args[3])))
-                        System.out.println("Backup protocol for \"" + args[2] + "\" successful.");
+                        System.out.println("Backup command for \"" + args[2] + "\" was successful.");
                     else
-                        System.out.println("WARNING: Backup protocol ended. Replication degree not fully met");
+                        System.out.println("WARNING: Backup command ended. Replication degree not fully met");
                     break;
                 case "RESTORE":
                     if (stub.restore(args[2]))
-                        System.out.println("Restore protocol for \"" + args[2] + "\" successful.");
+                        System.out.println("Restore command for \"" + args[2] + "\" was successful.");
                     else
-                        System.out.println("ERROR: Restore protocol failed.");
+                        System.out.println("ERROR: Restore command has failed.");
                     break;
                 case "DELETE":
-                    stub.delete(args[2]);
+                    if (stub.delete(args[2]))
+                        System.out.println("Delete command for \"" + args[2] + "\" was successful.");
+                    else
+                        System.out.println("ERROR: Delete command has failed.");
                     break;
                 case "RECLAIM":
                     stub.reclaim(Integer.parseInt(args[2]));
                     break;
                 case "STATE":
-                    stub.state();
+                    String stateInfo = stub.state();
+                    if (stateInfo != null)
+                        System.out.print(stateInfo);
+                    else
+                        System.out.println("ERROR: State command has failed.");
                     break;
                 default:
                     break;
             }
         } catch (Exception e) {
             System.err.println("TestApp - RMI exception: " + e.toString());
-            e.printStackTrace();
         }
     }
 }

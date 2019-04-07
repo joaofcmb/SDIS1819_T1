@@ -7,12 +7,15 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class FileInfo {
     private static final int CHUNK_SIZE = 64000;
+
     private final int chunkNum;
-    private AtomicIntegerArray replication;
+    private final int replicationDegree;
+    private final AtomicIntegerArray replication;
     private final File file;
 
-    public FileInfo(File file) {
+    public FileInfo(File file, int replicationDegree) {
         this.chunkNum = Math.toIntExact(file.length() / CHUNK_SIZE + 1);
+        this.replicationDegree = replicationDegree;
         this.replication = new AtomicIntegerArray(chunkNum);
         this.file = file;
     }
@@ -41,5 +44,9 @@ public class FileInfo {
 
     public int getChunkNum() {
         return chunkNum;
+    }
+
+    public int getReplicationDegree() {
+        return replicationDegree;
     }
 }

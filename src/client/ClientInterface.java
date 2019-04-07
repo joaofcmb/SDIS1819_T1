@@ -8,5 +8,5 @@ public interface ClientInterface extends Remote {
     boolean restore(String path) throws RemoteException;
     boolean delete(String path) throws RemoteException;
     boolean reclaim(int diskSpace) throws RemoteException;
-    boolean state() throws RemoteException;
+    String state() throws RemoteException;
 }

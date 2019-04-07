@@ -4,7 +4,6 @@ import peer.Peer;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -65,5 +64,27 @@ public class ChunkInfo {
 
     public boolean delete() {
         return this.chunkFile.delete() && this.infoFile.delete();
+    }
+
+    public int getRedundancy() throws IOException {
+        int redundancy;
+
+        synchronized (infoFile) {
+            try (Scanner s = new Scanner(infoFile)) {
+                redundancy = 0 - s.nextInt();
+            }
+        }
+
+        return redundancy;
+    }
+
+    public float getChunkSize() {
+        float size;
+
+        synchronized (chunkFile) {
+            size = chunkFile.length();
+        }
+
+        return size / 1000f;
     }
 }
