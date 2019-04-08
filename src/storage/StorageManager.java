@@ -39,7 +39,7 @@ public class StorageManager {
     }
 
     public static String getFileId(String path) {
-        return idMap.get(new File(path).getAbsolutePath());
+        return idMap.get(path);
     }
 
     public static synchronized void restoreFile(String path, byte[][] chunks) throws IOException {
@@ -59,8 +59,18 @@ public class StorageManager {
     }
 
     public static void storeChunk(String fileId, int chunkNo, int replicationDegree, byte[] body) throws IOException {
-        chunkMap.putIfAbsent(String.join(":", fileId, String.valueOf(chunkNo)),
+        chunkMap.put(String.join(":", fileId, String.valueOf(chunkNo)),
                 new ChunkInfo(fileId, chunkNo, replicationDegree, body));
+    }
+
+    public static String deleteFile(String path) {
+        File file = new File(path);
+
+        String fileId = idMap.remove(file.getAbsolutePath());
+        if (fileId != null)
+            fileMap.remove(fileId);
+
+        return fileId;
     }
 
     public static void deleteChunks(String fileId) {

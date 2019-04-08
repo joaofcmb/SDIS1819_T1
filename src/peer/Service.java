@@ -83,7 +83,7 @@ public class Service implements ClientInterface {
         System.out.println("DELETE COMMAND: " + path);
 
         try {
-            String fileId = StorageManager.getFileId(path);
+            String fileId = StorageManager.deleteFile(path);
             if (fileId == null)
                 throw new FileNotFoundException();
 
