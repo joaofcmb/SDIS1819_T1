@@ -27,6 +27,7 @@ public class BackupWorker implements Callable<Boolean> {
         String[] header = new String[]{"PUTCHUNK", protocolVersion, id, fileId,
                 String.valueOf(chunkNo), String.valueOf(replicationDegree)};
         do {
+            StorageManager.resetChunkReplication(fileId, chunkNo);
             Peer.mdb.sendMessage(header, chunk);
 
             try {

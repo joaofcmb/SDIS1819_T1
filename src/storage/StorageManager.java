@@ -59,8 +59,13 @@ public class StorageManager {
     }
 
     public static void storeChunk(String fileId, int chunkNo, int replicationDegree, byte[] body) throws IOException {
-        chunkMap.put(String.join(":", fileId, String.valueOf(chunkNo)),
-                new ChunkInfo(fileId, chunkNo, replicationDegree, body));
+        String key = String.join(":", fileId, String.valueOf(chunkNo));
+        synchronized (chunkMap) {
+            if (chunkMap.containsKey(key))
+                chunkMap.get(key).resetReplication(replicationDegree);
+            else
+                chunkMap.put(key, new ChunkInfo(fileId, chunkNo, replicationDegree, body));
+        }
     }
 
     public static String deleteFile(String path) {
@@ -75,11 +80,9 @@ public class StorageManager {
 
     public static void deleteChunks(String fileId) {
         synchronized (chunkMap) {
-            int chunkNo = 0;
-            String key = String.join(":", fileId, String.valueOf(chunkNo));
-            while (chunkMap.containsKey(key)) {
+            for (String key : chunkMap.keySet()) {
+                if (key.split(":")[0].equals(fileId))
                 chunkMap.remove(key).delete();
-                chunkNo++;
             }
         }
 
@@ -101,6 +104,10 @@ public class StorageManager {
             }
         }
         return;
+    }
+
+    public static void resetChunkReplication(String fileId, int chunkNo) {
+        fileMap.get(fileId).resetReplication(chunkNo);
     }
 
     public static int getChunkReplication(String fileId, int chunkNo) {
@@ -181,11 +188,13 @@ public class StorageManager {
             }
         }
 
-        // TODO Print value of max storage if set
-        stateInfo.append("- Maximum Storage: Unlimited")
+        stateInfo.append("- Maximum Storage: ")
+                .append("Unlimited") // TODO Print value of max storage if set
+                .append(" KBytes")
                 .append(System.lineSeparator())
                 .append("- Used Storage: ")
                 .append(usedStorage)
+                .append( "KBytes")
                 .append(System.lineSeparator());
 
         return stateInfo.toString();
