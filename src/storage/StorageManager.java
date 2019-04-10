@@ -58,14 +58,9 @@ public class StorageManager {
         return fileMap.get(fileId).retrieveChunks();
     }
 
-    public static void storeChunk(String fileId, int chunkNo, int replicationDegree, byte[] body) throws IOException {
-        String key = String.join(":", fileId, String.valueOf(chunkNo));
-        synchronized (chunkMap) {
-            if (chunkMap.containsKey(key))
-                chunkMap.get(key).resetReplication(replicationDegree);
-            else
-                chunkMap.put(key, new ChunkInfo(fileId, chunkNo, replicationDegree, body));
-        }
+    public static boolean storeChunk(String fileId, int chunkNo, int replicationDegree, byte[] body) throws IOException {
+        return chunkMap.putIfAbsent(String.join(":", fileId, String.valueOf(chunkNo)),
+                new ChunkInfo(fileId, chunkNo, replicationDegree, body)) == null;
     }
 
     public static String deleteFile(String path) {
@@ -104,10 +99,6 @@ public class StorageManager {
             }
         }
         return;
-    }
-
-    public static void resetChunkReplication(String fileId, int chunkNo) {
-        fileMap.get(fileId).resetReplication(chunkNo);
     }
 
     public static int getChunkReplication(String fileId, int chunkNo) {

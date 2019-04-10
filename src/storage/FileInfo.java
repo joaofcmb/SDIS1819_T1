@@ -38,10 +38,6 @@ public class FileInfo {
         return chunks;
     }
 
-    public void resetReplication(int chunkNo) {
-        this.replication.set(chunkNo, 0);
-    }
-
     public int getReplication(int chunkNo) {
         return this.replication.get(chunkNo);
     }

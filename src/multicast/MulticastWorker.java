@@ -6,10 +6,7 @@ import storage.StorageManager;
 
 import java.io.IOException;
 import java.util.AbstractMap;
-import java.util.Arrays;
 import java.util.Random;
-
-// TODO export chunkRequests functionality to seperate class
 
 public class MulticastWorker implements Runnable {
     private final int waitTime = new Random().nextInt(401);
@@ -35,13 +32,13 @@ public class MulticastWorker implements Runnable {
                 case "PUTCHUNK":
                     if (header[2].equals(Peer.getId())) break;
 
-                    StorageManager.storeChunk(header[3], chunkNo, Integer.parseInt(header[5]), body);
+                    if (StorageManager.storeChunk(header[3], chunkNo, Integer.parseInt(header[5]), body)) {
+                        Thread.sleep(waitTime);
 
-                    Thread.sleep(waitTime);
-
-                    header[0] = "STORED";
-                    header[2] = Peer.getId();
-                    Peer.mc.sendMessage(header);
+                        header[0] = "STORED";
+                        header[2] = Peer.getId();
+                        Peer.mc.sendMessage(header);
+                    }
                     break;
                 case "STORED":
                     StorageManager.signalStoreChunk(header[3], chunkNo);

@@ -30,12 +30,7 @@ public class ChunkInfo {
             }
         }
 
-        resetReplication(replicationDegree);
-    }
-
-    public void resetReplication(int replicationDegree) throws IOException {
         synchronized (infoFile) {
-            // The file keeps track of necessary replication to fulfill replicationDegree (<=0 means it's fulfilled)
             try (PrintWriter pw = new PrintWriter(infoFile)) {
                 pw.println(replicationDegree);
             }
