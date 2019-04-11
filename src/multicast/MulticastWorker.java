@@ -1,14 +1,18 @@
 package multicast;
 
 import peer.Peer;
+import storage.ChunkInfo;
 import storage.RestoreManager;
 import storage.StorageManager;
 
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MulticastWorker implements Runnable {
+    private static final ConcurrentHashMap<String, Object> flagMap = new ConcurrentHashMap<>();
+
     private final int waitTime = new Random().nextInt(401);
 
     private String[] header;
@@ -30,6 +34,8 @@ public class MulticastWorker implements Runnable {
 
             switch(header[0]) {
                 case "PUTCHUNK":
+                    flagMap.remove(header[3] + chunkNo);
+
                     if (header[2].equals(Peer.getId())) break;
 
                     if (StorageManager.storeChunk(header[3], chunkNo, Integer.parseInt(header[5]), body)) {
@@ -61,6 +67,24 @@ public class MulticastWorker implements Runnable {
                 case "CHUNK":
                     RestoreManager.unMarkChunk(header[3], chunkNo);
                     RestoreManager.putChunk(header[3], chunkNo, body);
+                    break;
+                case "REMOVED":
+                    ChunkInfo chunkInfo = StorageManager.signalRemoveChunk(header[3], chunkNo);
+
+                    if (chunkInfo != null) {
+                        flagMap.putIfAbsent(header[3] + chunkNo, new Object());
+
+                        Thread.sleep(waitTime);
+
+                        if (flagMap.remove(header[3] + chunkNo) != null) {
+                            Peer.mdb.sendMessage(new String[]{"PUTCHUNK", Peer.getProtocolVersion(), Peer.getId(),
+                                            header[3], String.valueOf(chunkNo),
+                                            String.valueOf(chunkInfo.getReplicationDegree())
+                                    },
+                                    chunkInfo.getChunk()
+                            );
+                        }
+                    }
                     break;
             }
         } catch (InterruptedException | IOException e) {

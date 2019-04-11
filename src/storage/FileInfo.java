@@ -21,8 +21,14 @@ public class FileInfo {
     }
 
     public void incReplication(int chunkNo) {
-        if (chunkNo < this.replication.length()){
+        if (chunkNo < this.replication.length()) {
             this.replication.incrementAndGet(chunkNo);
+        }
+    }
+
+    public void decReplication(int chunkNo) {
+        if (chunkNo < this.replication.length()) {
+            this.replication.decrementAndGet(chunkNo);
         }
     }
 

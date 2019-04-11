@@ -30,7 +30,7 @@ public class TestApp {
                         System.out.println("ERROR: Delete command has failed.");
                     break;
                 case "RECLAIM":
-                    stub.reclaim(Integer.parseInt(args[2]));
+                    stub.reclaim(Double.parseDouble(args[2]));
                     break;
                 case "STATE":
                     String stateInfo = stub.state();

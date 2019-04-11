@@ -1,12 +1,14 @@
 package peer;
 
 import client.ClientInterface;
+import storage.ChunkInfo;
 import storage.StorageManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +75,7 @@ public class Service implements ClientInterface {
             System.out.println("Restore protocol for \"" + path + "\" successful.");
             return true;
         } catch(Exception e) {
+            e.printStackTrace();
             System.out.println("ERROR: Restore protocol failed. The Operation wasn't fully successful");
             return false;
         }
@@ -98,9 +101,18 @@ public class Service implements ClientInterface {
     }
 
     @Override
-    public boolean reclaim(int diskSpace) {
+    public boolean reclaim(double diskSpace) {
         System.out.println("RECLAIM COMMAND: " + diskSpace);
-        return false;
+
+        try {
+            StorageManager.reclaimSpace(diskSpace);
+
+            System.out.println("Reclaim protocol successful (" + diskSpace + " max storage).");
+            return true;
+        } catch (Exception e) {
+            System.out.println("ERROR: Reclaim protocol failed.");
+            return false;
+        }
     }
 
     @Override

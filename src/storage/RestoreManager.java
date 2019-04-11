@@ -8,7 +8,7 @@ public class RestoreManager {
     private static final ConcurrentHashMap<String, Optional<byte[]>> chunkMap = new ConcurrentHashMap<>();
 
     public static void markChunk(String fileId, int chunkNo) {
-        flagMap.put(fileId + chunkNo, new Object());
+        flagMap.putIfAbsent(fileId + chunkNo, new Object());
     }
 
     public static boolean checkAndUnMarkChunk(String fileId, int chunkNo) {

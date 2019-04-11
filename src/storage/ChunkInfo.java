@@ -9,12 +9,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-// TODO keep track of peers who stored chunk to avoid incrementing replication on duplicate stored messages from multiple backups of same file in different peers
-
-public class ChunkInfo {
+public class ChunkInfo implements Comparable<ChunkInfo> {
     private final File chunkFile;
     private final File infoFile;
 
+    private final int replicationDegree;
+
+    private int redundancy;
     public ChunkInfo(String fileId, int chunkNo, int replicationDegree, byte[] body) throws IOException {
         this.chunkFile = new File("./peer" + Peer.getId() + "/backup/" + fileId + "/chk" + chunkNo);
         this.chunkFile.getParentFile().mkdirs();
@@ -32,23 +33,48 @@ public class ChunkInfo {
 
         synchronized (infoFile) {
             try (PrintWriter pw = new PrintWriter(infoFile)) {
-                pw.println(replicationDegree);
+                pw.println("0 " + replicationDegree);
             }
+
+            this.replicationDegree = replicationDegree;
+            this.setRedundancy(replicationDegree);
         }
     }
 
     public void incReplication() throws IOException {
         synchronized (infoFile) {
-            int necessaryReplication;
+            int replication, desired;
 
             try (Scanner s = new Scanner(infoFile)) {
-                necessaryReplication = s.nextInt();
+                replication = s.nextInt() + 1;
+                desired = s.nextInt();
             }
 
+            this.setRedundancy(replication - desired);
+
             try (PrintWriter pw = new PrintWriter(infoFile)) {
-                pw.println(necessaryReplication - 1);
+                pw.println(replication + " " + desired);
             }
         }
+    }
+
+    public boolean decReplication() throws IOException {
+        int replication, desired;
+
+        synchronized (infoFile) {
+            try (Scanner s = new Scanner(infoFile)) {
+                replication = s.nextInt() - 1;
+                desired = s.nextInt();
+            }
+
+            this.setRedundancy(replication - desired);
+
+            try (PrintWriter pw = new PrintWriter(infoFile)) {
+                pw.println(replication + " " + desired);
+            }
+        }
+
+        return replication < desired;
     }
 
     public byte[] getChunk() throws IOException {
@@ -61,29 +87,47 @@ public class ChunkInfo {
         }
     }
 
-    public boolean delete() {
-        return this.chunkFile.delete() && this.infoFile.delete();
+    public void delete() {
+        this.chunkFile.delete();
+        this.infoFile.delete();
     }
 
-    public int getRedundancy() throws IOException {
-        int redundancy;
-
+    public int getReplication() throws IOException {
         synchronized (infoFile) {
             try (Scanner s = new Scanner(infoFile)) {
-                redundancy = 0 - s.nextInt();
+                return s.nextInt();
             }
         }
+    }
 
+    public synchronized int getRedundancy() {
         return redundancy;
     }
 
-    public float getChunkSize() {
-        float size;
+    public synchronized void setRedundancy(int redundancy) {
+        this.redundancy = redundancy;
+    }
 
+    public double getChunkSize() {
         synchronized (chunkFile) {
-            size = chunkFile.length();
+            return chunkFile.length() / 1000d;
         }
+    }
 
-        return size / 1000f;
+    public int getReplicationDegree() {
+        return replicationDegree;
+    }
+
+    @Override
+    public synchronized int compareTo(ChunkInfo o) {
+        int r1 = this.getRedundancy(), r2 = o.getRedundancy();
+
+        if      (r1 > r2)   return -1;
+        else if (r2 < r1)   return 1;
+        else {
+            if      (this.replicationDegree > o.replicationDegree)   return -1;
+            else if (this.replicationDegree < o.replicationDegree)   return 1;
+            else                                                     return 0;
+        }
     }
 }
