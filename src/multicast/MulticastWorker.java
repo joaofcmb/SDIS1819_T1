@@ -42,6 +42,7 @@ public class MulticastWorker implements Runnable {
                         Thread.sleep(waitTime);
 
                         header[0] = "STORED";
+                        header[1] = Peer.getProtocolVersion();
                         header[2] = Peer.getId();
                         Peer.mc.sendMessage(header);
                     }
@@ -57,6 +58,7 @@ public class MulticastWorker implements Runnable {
 
                         if (RestoreManager.checkAndUnMarkChunk(header[3], chunkNo)) {
                             header[0] = "CHUNK";
+                            header[1] = Peer.getProtocolVersion();
                             header[2] = Peer.getId();
                             Peer.mdr.sendMessage(header, StorageManager.getChunk(header[3], chunkNo));
                         }

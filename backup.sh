@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CLASS_PATH=".\build\production\SDIS1819_T1"
+CLASS_PATH="./build/production/SDIS1819_T1"
 TESTAPP_MAIN="client.TestApp"
 
 PEER_ID=$1
