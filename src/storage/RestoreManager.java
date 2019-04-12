@@ -25,12 +25,7 @@ public class RestoreManager {
     }
 
     public static void putChunk(String fileId, int chunkNo, byte[] body) {
-        String key = fileId + chunkNo;
-
-        synchronized (chunkMap) {
-            if (chunkMap.containsKey(key))
-                chunkMap.put(key, Optional.of(body));
-        }
+        chunkMap.replace(fileId + chunkNo, Optional.of(body));
     }
 
     public static byte[] retrieveChunk(String fileId, int chunkNo) {

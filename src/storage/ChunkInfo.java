@@ -58,7 +58,7 @@ public class ChunkInfo implements Comparable<ChunkInfo> {
         }
     }
 
-    public boolean decReplication() throws IOException {
+    public void decReplication() throws IOException {
         int replication, desired;
 
         synchronized (infoFile) {
@@ -73,8 +73,6 @@ public class ChunkInfo implements Comparable<ChunkInfo> {
                 pw.println(replication + " " + desired);
             }
         }
-
-        return replication < desired;
     }
 
     public byte[] getChunk() throws IOException {

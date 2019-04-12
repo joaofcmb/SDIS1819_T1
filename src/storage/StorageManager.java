@@ -96,13 +96,11 @@ public class StorageManager {
 
     public static void deleteChunks(String fileId) {
         synchronized (storageLock) {
-            synchronized (chunkMap) {
-                for (String key : chunkMap.keySet()) {
-                    if (key.split(":")[0].equals(fileId)) {
-                        ChunkInfo chunkInfo = chunkMap.remove(key);
-                        StorageManager.usedStorage -= chunkInfo.getChunkSize();
-                        chunkInfo.delete();
-                    }
+            for (String key : chunkMap.keySet()) {
+                if (key.split(":")[0].equals(fileId)) {
+                    ChunkInfo chunkInfo = chunkMap.remove(key);
+                    StorageManager.usedStorage -= chunkInfo.getChunkSize();
+                    chunkInfo.delete();
                 }
             }
         }
@@ -112,43 +110,37 @@ public class StorageManager {
     }
 
     public static void signalStoreChunk(String fileId, int chunkNo) throws IOException {
-        synchronized (fileMap) {
-            if (fileMap.containsKey(fileId)) {
-                fileMap.get(fileId).incReplication(chunkNo);
-                return;
-            }
+        FileInfo fileInfo = fileMap.get(fileId);
+        if(fileInfo != null) {
+            fileInfo.incReplication(chunkNo);
+            return;
         }
-        synchronized (chunkMap) {
-            String key = String.join(":", fileId, String.valueOf(chunkNo));
-            if (chunkMap.containsKey(key)) {
-                chunkMap.get(key).incReplication();
-            }
+
+        ChunkInfo chunkInfo = chunkMap.get(String.join(":", fileId, String.valueOf(chunkNo)));
+        if (chunkInfo != null) {
+            chunkInfo.incReplication();
         }
     }
 
     public static ChunkInfo signalRemoveChunk(String fileId, int chunkNo) throws IOException {
-        synchronized (fileMap) {
-            if (fileMap.containsKey(fileId)) {
-                fileMap.get(fileId).decReplication(chunkNo);
-                return null;
-            }
+        FileInfo fileInfo = fileMap.get(fileId);
+        if(fileInfo != null) {
+            fileInfo.decReplication(chunkNo);
+            return null;
         }
-        synchronized (chunkMap) {
-            String key = String.join(":", fileId, String.valueOf(chunkNo));
-            if (chunkMap.containsKey(key)) {
-                ChunkInfo chunkInfo = chunkMap.get(key);
-                chunkInfo.decReplication();
-                return chunkInfo;
-            }
+
+        ChunkInfo chunkInfo = chunkMap.get(String.join(":", fileId, String.valueOf(chunkNo)));
+        if (chunkInfo != null) {
+            chunkInfo.decReplication();
+            return chunkInfo;
         }
 
         return null;
     }
 
     public static int getChunkReplication(String fileId, int chunkNo) {
-        synchronized (fileMap) {
-            return fileMap.containsKey(fileId) ? fileMap.get(fileId).getReplication(chunkNo) : -1;
-        }
+        FileInfo fileInfo = fileMap.get(fileId);
+        return fileInfo != null? fileInfo.getReplication(chunkNo) : -1;
     }
 
     public static int getChunkNum(String fileId) {
@@ -171,53 +163,49 @@ public class StorageManager {
                 .append(System.lineSeparator())
                 .append(System.lineSeparator());
 
-        synchronized (idMap) {
-            for (String path : idMap.keySet()) {
-                String fileId = idMap.get(path);
-                FileInfo fileInfo = fileMap.get(fileId);
+        for (String path : idMap.keySet()) {
+            String fileId = idMap.get(path);
+            FileInfo fileInfo = fileMap.get(fileId);
 
-                stateInfo.append("  - File Path: ")
-                        .append(path)
-                        .append(System.lineSeparator())
-                        .append("  - File Id: ")
-                        .append(fileId)
-                        .append(System.lineSeparator())
-                        .append("  - Desired Replication Degree: ")
-                        .append(fileInfo.getReplicationDegree())
+            stateInfo.append("  - File Path: ")
+                    .append(path)
+                    .append(System.lineSeparator())
+                    .append("  - File Id: ")
+                    .append(fileId)
+                    .append(System.lineSeparator())
+                    .append("  - Desired Replication Degree: ")
+                    .append(fileInfo.getReplicationDegree())
+                    .append(System.lineSeparator());
+
+            for (int i = 0; i < fileInfo.getChunkNum(); i++) {
+                stateInfo.append("    - Chunk ")
+                        .append(i)
+                        .append(": Perceived Replication ")
+                        .append(fileInfo.getReplication(i))
                         .append(System.lineSeparator());
-
-                for (int i = 0; i < fileInfo.getChunkNum(); i++) {
-                    stateInfo.append("    - Chunk ")
-                            .append(i)
-                            .append(": Perceived Replication ")
-                            .append(fileInfo.getReplication(i))
-                            .append(System.lineSeparator());
-                }
-
-                stateInfo.append(System.lineSeparator());
             }
+
+            stateInfo.append(System.lineSeparator());
         }
 
         stateInfo.append("- Stored Chunks:")
                 .append(System.lineSeparator())
                 .append(System.lineSeparator());
 
-        synchronized (chunkMap) {
-            for (String key : chunkMap.keySet()) {
-                ChunkInfo chunkInfo = chunkMap.get(key);
+        for (String key : chunkMap.keySet()) {
+            ChunkInfo chunkInfo = chunkMap.get(key);
 
-                stateInfo.append("  - ID (\"fileId\":\"chunkNo\"): ")
-                        .append(key)
-                        .append(System.lineSeparator())
-                        .append("  - Chunk Size: ")
-                        .append(chunkInfo.getChunkSize())
-                        .append(" KBytes")
-                        .append(System.lineSeparator())
-                        .append("  - Perceived replication: ")
-                        .append(chunkInfo.getReplication())
-                        .append(System.lineSeparator())
-                        .append(System.lineSeparator());
-            }
+            stateInfo.append("  - ID (\"fileId\":\"chunkNo\"): ")
+                    .append(key)
+                    .append(System.lineSeparator())
+                    .append("  - Chunk Size: ")
+                    .append(chunkInfo.getChunkSize())
+                    .append(" KBytes")
+                    .append(System.lineSeparator())
+                    .append("  - Perceived replication: ")
+                    .append(chunkInfo.getReplication())
+                    .append(System.lineSeparator())
+                    .append(System.lineSeparator());
         }
 
         stateInfo.append("- Maximum Storage: ")
@@ -239,22 +227,20 @@ public class StorageManager {
 
             if (StorageManager.usedStorage <= StorageManager.maxStorage) return;
 
-            synchronized (chunkMap) {
-                PriorityQueue<String> chunkQueue = new PriorityQueue<>(chunkMap.size(),
-                        Comparator.comparing(chunkMap::get));
-                chunkQueue.addAll(chunkMap.keySet());
+            PriorityQueue<String> chunkQueue = new PriorityQueue<>(chunkMap.size(),
+                    Comparator.comparing(chunkMap::get));
+            chunkQueue.addAll(chunkMap.keySet());
 
-                while (StorageManager.usedStorage > StorageManager.maxStorage) {
-                    String key = Objects.requireNonNull(chunkQueue.poll());
-                    String[] keySplit = key.split(":");
+            while (StorageManager.usedStorage > StorageManager.maxStorage) {
+                String key = Objects.requireNonNull(chunkQueue.poll());
+                String[] keySplit = key.split(":");
 
-                    ChunkInfo chunkInfo = chunkMap.remove(key);
-                    StorageManager.usedStorage -= chunkInfo.getChunkSize();
-                    chunkInfo.delete();
+                ChunkInfo chunkInfo = chunkMap.remove(key);
+                StorageManager.usedStorage -= chunkInfo.getChunkSize();
+                chunkInfo.delete();
 
-                    Peer.mc.sendMessage(new String[] {"REMOVED", Peer.getProtocolVersion(), Peer.getId(),
-                            keySplit[0], keySplit[1]} );
-                }
+                Peer.mc.sendMessage(new String[] {"REMOVED", Peer.getProtocolVersion(), Peer.getId(),
+                        keySplit[0], keySplit[1]} );
             }
         }
     }

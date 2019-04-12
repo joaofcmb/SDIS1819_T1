@@ -3,12 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="5b529179-4a03-4c01-9a89-202f8efc85f6" name="Default Changelist" comment="k">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastWorker.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastWorker.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/Peer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/Peer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/RestoreWorker.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/RestoreWorker.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/peers.bat" beforeDir="false" afterPath="$PROJECT_DIR$/peers.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/peer/Peer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/peer/Peer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/peer/RestoreWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/peer/RestoreWorker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/RestoreManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/RestoreManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/StorageManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/StorageManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/storage/ChunkInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/ChunkInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/storage/RestoreManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/RestoreManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/storage/StorageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/StorageManager.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,17 +29,20 @@
     <expand />
     <select />
   </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/storage/StorageManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="122" column="44" selection-start-line="122" selection-start-column="44" selection-end-line="122" selection-end-column="44" />
+            <state relative-caret-position="256">
+              <caret line="119" column="32" lean-forward="true" selection-start-line="119" selection-start-column="32" selection-end-line="119" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#5475#5476#0" expanded="true" />
-                <element signature="e#5531#5532#0" expanded="true" />
+                <element signature="e#5207#5208#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -49,8 +51,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/storage/ChunkInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1581">
-              <caret line="100" column="5" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="5" />
+            <state relative-caret-position="538">
+              <caret line="46" selection-start-line="46" selection-end-line="46" />
             </state>
           </provider>
         </entry>
@@ -70,8 +72,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/multicast/MulticastWorker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="38" column="62" selection-start-line="38" selection-start-column="62" selection-end-line="38" selection-end-column="62" />
+            <state relative-caret-position="720">
+              <caret line="72" column="31" selection-start-line="72" selection-start-column="31" selection-end-line="72" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/storage/RestoreManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="22" column="36" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -103,11 +117,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/peer/Peer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
-              <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+            <state relative-caret-position="408">
+              <caret line="24" column="87" selection-start-line="24" selection-start-column="87" selection-end-line="24" selection-end-column="87" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -173,12 +187,9 @@
         <option value="$PROJECT_DIR$/state.bat" />
         <option value="$PROJECT_DIR$/src/client/ClientInterface.java" />
         <option value="$PROJECT_DIR$/src/client/TestApp.java" />
-        <option value="$PROJECT_DIR$/src/storage/RestoreManager.java" />
         <option value="$PROJECT_DIR$/src/peer/BackupWorker.java" />
         <option value="$PROJECT_DIR$/reclaim.bat" />
         <option value="$PROJECT_DIR$/src/storage/FileInfo.java" />
-        <option value="$PROJECT_DIR$/src/storage/StorageManager.java" />
-        <option value="$PROJECT_DIR$/src/storage/ChunkInfo.java" />
         <option value="$PROJECT_DIR$/src/peer/Service.java" />
         <option value="$PROJECT_DIR$/backup.sh" />
         <option value="$PROJECT_DIR$/delete.sh" />
@@ -190,6 +201,9 @@
         <option value="$PROJECT_DIR$/src/peer/RestoreWorker.java" />
         <option value="$PROJECT_DIR$/peers.bat" />
         <option value="$PROJECT_DIR$/src/peer/Peer.java" />
+        <option value="$PROJECT_DIR$/src/storage/StorageManager.java" />
+        <option value="$PROJECT_DIR$/src/storage/ChunkInfo.java" />
+        <option value="$PROJECT_DIR$/src/storage/RestoreManager.java" />
       </list>
     </option>
   </component>
@@ -263,6 +277,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../IART/IART1819_T5" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -365,12 +380,12 @@
       <workItem from="1554902361878" duration="1094000" />
       <workItem from="1554985331699" duration="16080000" />
       <workItem from="1555054027999" duration="4567000" />
-      <workItem from="1555082453845" duration="1992000" />
+      <workItem from="1555082453845" duration="7644000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="142980000" />
+    <option name="totallyTimeSpent" value="148632000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -383,7 +398,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2521322" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -516,16 +530,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/storage/RestoreManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="18" column="23" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/reclaim.bat">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -571,33 +575,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/storage/ChunkInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1581">
-          <caret line="100" column="5" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/storage/FileInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="41" column="9" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/multicast/MulticastWorker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="38" column="62" selection-start-line="38" selection-start-column="62" selection-end-line="38" selection-end-column="62" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/peer/Service.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="867">
@@ -632,15 +609,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/storage/StorageManager.java">
+    <entry file="file://$PROJECT_DIR$/src/peer/Peer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="122" column="44" selection-start-line="122" selection-start-column="44" selection-end-line="122" selection-end-column="44" />
+        <state relative-caret-position="408">
+          <caret line="24" column="87" selection-start-line="24" selection-start-column="87" selection-end-line="24" selection-end-column="87" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5475#5476#0" expanded="true" />
-            <element signature="e#5531#5532#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/storage/FileInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="41" column="9" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/storage/RestoreManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="22" column="36" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/storage/ChunkInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="538">
+          <caret line="46" selection-start-line="46" selection-end-line="46" />
         </state>
       </provider>
     </entry>
@@ -654,12 +656,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/peer/Peer.java">
+    <entry file="file://$PROJECT_DIR$/src/multicast/MulticastWorker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+        <state relative-caret-position="720">
+          <caret line="72" column="31" selection-start-line="72" selection-start-column="31" selection-end-line="72" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/storage/StorageManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="119" column="32" lean-forward="true" selection-start-line="119" selection-start-column="32" selection-end-line="119" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5207#5208#0" expanded="true" />
           </folding>
         </state>
       </provider>
