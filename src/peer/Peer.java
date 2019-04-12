@@ -26,7 +26,7 @@ public class Peer {
             20, 20, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
     private static final ThreadPoolExecutor multicastThreadPool = new ThreadPoolExecutor(
-            16, 16, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+            20, 20, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
     public static void main(String[] args) throws RemoteException {
         if (args.length != 9)

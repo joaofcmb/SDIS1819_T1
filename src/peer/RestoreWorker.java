@@ -25,7 +25,7 @@ public class RestoreWorker implements Callable<byte[]> {
 
         Peer.mc.sendMessage(new String[] {"GETCHUNK", protocolVersion, id, fileId, String.valueOf(chunkNo)} );
 
-        while(chunk == null) {
+        while(chunk == null && waitTime < 32000) {
             RestoreManager.addChunk(fileId, chunkNo);
 
             try {
