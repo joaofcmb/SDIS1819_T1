@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -21,13 +20,13 @@ public class Peer {
     public static MulticastInterface mc, mdb, mdr;
 
     private static final ThreadPoolExecutor backupThreadPool = new ThreadPoolExecutor(
-            5, Integer.MAX_VALUE, 5, TimeUnit.SECONDS, new SynchronousQueue<>());
+            50, 50, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
     private static final ThreadPoolExecutor restoreThreadPool = new ThreadPoolExecutor(
-            5, Integer.MAX_VALUE, 5, TimeUnit.SECONDS, new SynchronousQueue<>());
+            20, 20, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
     private static final ThreadPoolExecutor multicastThreadPool = new ThreadPoolExecutor(
-            8, 8, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+            16, 16, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
     public static void main(String[] args) throws RemoteException {
         if (args.length != 9)

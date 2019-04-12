@@ -60,8 +60,7 @@ public class Service implements ClientInterface {
             for (int chunkNo = 0; chunkNo < chunkNum; chunkNo++)
                 workers.add(new RestoreWorker(fileId, chunkNo));
 
-            List<Future<byte[]>> resultList = Peer.getRestoreThreadPool().invokeAll(workers,
-                    30, TimeUnit.SECONDS);
+            List<Future<byte[]>> resultList = Peer.getRestoreThreadPool().invokeAll(workers);
 
             byte[][] chunks = new byte[chunkNum][];
             for (int i = 0; i < chunkNum; i++) {
