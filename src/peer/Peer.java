@@ -3,9 +3,8 @@ package peer;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import client.ClientInterface;
 import multicast.MulticastInterface;
@@ -19,14 +18,11 @@ public class Peer {
 
     public static MulticastInterface mc, mdb, mdr;
 
-    private static final ThreadPoolExecutor backupThreadPool = new ThreadPoolExecutor(
-            50, 50, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+    private static final ExecutorService backupThreadPool = Executors.newFixedThreadPool(50);
 
-    private static final ThreadPoolExecutor restoreThreadPool = new ThreadPoolExecutor(
-            20, 20, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+    private static final ExecutorService restoreThreadPool = Executors.newFixedThreadPool(20);
 
-    private static final ThreadPoolExecutor multicastThreadPool = new ThreadPoolExecutor(
-            20, 20, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+    private static final ExecutorService multicastThreadPool = Executors.newCachedThreadPool();
 
     public static void main(String[] args) throws RemoteException {
         if (args.length != 9)
@@ -71,15 +67,15 @@ public class Peer {
         return id;
     }
 
-    public static ThreadPoolExecutor getBackupThreadPool() {
+    public static ExecutorService getBackupThreadPool() {
         return backupThreadPool;
     }
 
-    public static ThreadPoolExecutor getMulticastThreadPool() {
+    public static ExecutorService getMulticastThreadPool() {
         return multicastThreadPool;
     }
 
-    public static ThreadPoolExecutor getRestoreThreadPool() {
+    public static ExecutorService getRestoreThreadPool() {
         return restoreThreadPool;
     }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 // TODO use exception throwing on RMI for better error display for client
 
@@ -64,7 +63,8 @@ public class Service implements ClientInterface {
 
             byte[][] chunks = new byte[chunkNum][];
             for (int i = 0; i < chunkNum; i++) {
-                if (!resultList.get(i).isDone()) throw new Exception();
+                if (!resultList.get(i).isDone())
+                    throw new InterruptedException();
 
                 chunks[i] = resultList.get(i).get();
             }
@@ -74,8 +74,7 @@ public class Service implements ClientInterface {
             System.out.println("Restore protocol for \"" + path + "\" successful.");
             return true;
         } catch(Exception e) {
-            e.printStackTrace();
-            System.out.println("ERROR: Restore protocol failed. The Operation wasn't fully successful");
+            System.out.println("ERROR: Restore protocol failed. The Operation wasn't successful");
             return false;
         }
     }

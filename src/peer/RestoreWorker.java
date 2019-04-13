@@ -38,6 +38,9 @@ public class RestoreWorker implements Callable<byte[]> {
             waitTime *= 2;
         }
 
+        if (chunk == null)
+            Thread.currentThread().interrupt();
+
         return chunk;
     }
 }
