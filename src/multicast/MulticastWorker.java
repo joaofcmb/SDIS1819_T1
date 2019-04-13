@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MulticastWorker implements Runnable {
+    private static final String ENH_VERSION = "2.0";
     private static final ConcurrentHashMap<String, Object> flagMap = new ConcurrentHashMap<>();
 
     private final int waitTime = new Random().nextInt(401);
@@ -38,7 +39,20 @@ public class MulticastWorker implements Runnable {
 
                     if (header[2].equals(Peer.getId())) break;
 
-                    if (StorageManager.storeChunk(header[3], chunkNo, Integer.parseInt(header[5]), body)) {
+                    int replicationDegree = Integer.parseInt(header[5]);
+                    if (Peer.getProtocolVersion().equals(ENH_VERSION)) {
+                        Thread.sleep(waitTime);
+
+                        if (StorageManager.getChunkReplication(header[3], chunkNo) < replicationDegree) {
+                            StorageManager.storeChunk(header[3], chunkNo, replicationDegree, body);
+
+                            header[0] = "STORED";
+                            header[1] = Peer.getProtocolVersion();
+                            header[2] = Peer.getId();
+                            Peer.mc.sendMessage(header);
+                        }
+                    }
+                    else if (StorageManager.storeChunk(header[3], chunkNo, replicationDegree, body)) {
                         Thread.sleep(waitTime);
 
                         header[0] = "STORED";
@@ -46,6 +60,7 @@ public class MulticastWorker implements Runnable {
                         header[2] = Peer.getId();
                         Peer.mc.sendMessage(header);
                     }
+
                     break;
                 case "STORED":
                     StorageManager.signalStoreChunk(header[3], chunkNo);

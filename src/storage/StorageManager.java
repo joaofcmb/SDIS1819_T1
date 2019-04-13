@@ -17,6 +17,7 @@ public class StorageManager {
     private static final ConcurrentHashMap<String, String> idMap = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, FileInfo> fileMap = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, ChunkInfo> chunkMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Integer> replicationMap = new ConcurrentHashMap<>();
 
     private static final Object storageLock = new Object();
     private static double usedStorage = 0d;
@@ -85,10 +86,14 @@ public class StorageManager {
         synchronized (storageLock) {
             if (StorageManager.usedStorage + chunkSize > StorageManager.maxStorage) return false;
 
+            int replication = getChunkReplication(fileId, chunkNo);
             boolean retVal = chunkMap.putIfAbsent(String.join(":", fileId, String.valueOf(chunkNo)),
-                    new ChunkInfo(fileId, chunkNo, replicationDegree, body)) == null;
+                    new ChunkInfo(fileId, chunkNo, replication, replicationDegree, body)) == null;
 
-            if (retVal) StorageManager.usedStorage += chunkSize;
+            if (retVal) {
+                StorageManager.usedStorage += chunkSize;
+                replicationMap.remove(fileId + chunkNo);
+            }
 
             return retVal;
         }
@@ -103,6 +108,8 @@ public class StorageManager {
                     chunkInfo.delete();
                 }
             }
+
+            StorageManager.maxStorage = Double.max(0d, maxStorage);
         }
 
         new File("./peer" + Peer.getId() + "/backup/" + fileId).delete();
@@ -111,7 +118,7 @@ public class StorageManager {
 
     public static void signalStoreChunk(String fileId, int chunkNo) throws IOException {
         FileInfo fileInfo = fileMap.get(fileId);
-        if(fileInfo != null) {
+        if (fileInfo != null) {
             fileInfo.incReplication(chunkNo);
             return;
         }
@@ -119,12 +126,15 @@ public class StorageManager {
         ChunkInfo chunkInfo = chunkMap.get(String.join(":", fileId, String.valueOf(chunkNo)));
         if (chunkInfo != null) {
             chunkInfo.incReplication();
+            return;
         }
+
+        replicationMap.compute(fileId + chunkNo, (key, currVal) -> currVal != null ? currVal++ : 1);
     }
 
     public static ChunkInfo signalRemoveChunk(String fileId, int chunkNo) throws IOException {
         FileInfo fileInfo = fileMap.get(fileId);
-        if(fileInfo != null) {
+        if (fileInfo != null) {
             fileInfo.decReplication(chunkNo);
             return null;
         }
@@ -135,12 +145,17 @@ public class StorageManager {
             return chunkInfo;
         }
 
+        replicationMap.compute(fileId + chunkNo, (key, currVal) -> currVal != null ? currVal-- : 0);
         return null;
     }
 
     public static int getChunkReplication(String fileId, int chunkNo) {
         FileInfo fileInfo = fileMap.get(fileId);
-        return fileInfo != null? fileInfo.getReplication(chunkNo) : -1;
+        if (fileInfo != null) {
+            return fileInfo.getReplication(chunkNo);
+        }
+
+        return replicationMap.computeIfAbsent(fileId + chunkNo, (key) -> 0);
     }
 
     public static int getChunkNum(String fileId) {
@@ -223,7 +238,7 @@ public class StorageManager {
 
     public static void reclaimSpace(double diskSpace) {
         synchronized (storageLock) {
-            StorageManager.maxStorage = Double.max(0f, diskSpace);
+            StorageManager.maxStorage = Double.max(0d, diskSpace);
 
             if (StorageManager.usedStorage <= StorageManager.maxStorage) return;
 

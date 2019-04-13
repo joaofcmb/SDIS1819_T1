@@ -1,14 +1,12 @@
 package peer;
 
 import client.ClientInterface;
-import storage.ChunkInfo;
 import storage.StorageManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 

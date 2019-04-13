@@ -16,7 +16,7 @@ public class ChunkInfo implements Comparable<ChunkInfo> {
     private final int replicationDegree;
 
     private int redundancy;
-    public ChunkInfo(String fileId, int chunkNo, int replicationDegree, byte[] body) throws IOException {
+    public ChunkInfo(String fileId, int chunkNo, int replication, int replicationDegree, byte[] body) throws IOException {
         this.chunkFile = new File("./peer" + Peer.getId() + "/backup/" + fileId + "/chk" + chunkNo);
         this.chunkFile.getParentFile().mkdirs();
         this.chunkFile.createNewFile();
@@ -33,11 +33,11 @@ public class ChunkInfo implements Comparable<ChunkInfo> {
 
         synchronized (infoFile) {
             try (PrintWriter pw = new PrintWriter(infoFile)) {
-                pw.println("0 " + replicationDegree);
+                pw.println(replication + " " + replicationDegree);
             }
 
             this.replicationDegree = replicationDegree;
-            this.setRedundancy(replicationDegree);
+            this.setRedundancy(replication - replicationDegree);
         }
     }
 
