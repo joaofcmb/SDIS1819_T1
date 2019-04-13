@@ -2,18 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5b529179-4a03-4c01-9a89-202f8efc85f6" name="Default Changelist" comment="k">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastWorker.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastWorker.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/RestoreWorker.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/RestoreWorker.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/Service.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/Service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/ChunkInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/ChunkInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/StorageManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/StorageManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/peers.bat" beforeDir="false" afterPath="$PROJECT_DIR$/peers.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/peers.sh" beforeDir="false" afterPath="$PROJECT_DIR$/peers.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/multicast/MulticastWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/multicast/MulticastWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/peer/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/peer/Service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/storage/ChunkInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/ChunkInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/storage/StorageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/StorageManager.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +30,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/storage/StorageManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="379">
@@ -81,11 +70,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/multicast/MulticastWorker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="45" column="62" selection-start-line="45" selection-start-column="43" selection-end-line="45" selection-end-column="62" />
+            <state relative-caret-position="142">
+              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -209,11 +198,11 @@
         <option value="$PROJECT_DIR$/src/peer/Peer.java" />
         <option value="$PROJECT_DIR$/src/peer/RestoreWorker.java" />
         <option value="$PROJECT_DIR$/src/peer/Service.java" />
-        <option value="$PROJECT_DIR$/src/multicast/MulticastWorker.java" />
         <option value="$PROJECT_DIR$/peers.bat" />
         <option value="$PROJECT_DIR$/peers.sh" />
         <option value="$PROJECT_DIR$/src/storage/ChunkInfo.java" />
         <option value="$PROJECT_DIR$/src/storage/StorageManager.java" />
+        <option value="$PROJECT_DIR$/src/multicast/MulticastWorker.java" />
       </list>
     </option>
   </component>
@@ -396,7 +385,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="156119000" />
+    <option name="totallyTimeSpent" value="157663000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -669,16 +658,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/multicast/MulticastWorker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="45" column="62" selection-start-line="45" selection-start-column="43" selection-end-line="45" selection-end-column="62" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/storage/StorageManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="379">
@@ -686,6 +665,16 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5876#5877#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/multicast/MulticastWorker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="142">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

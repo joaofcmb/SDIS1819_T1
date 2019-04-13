@@ -43,9 +43,8 @@ public class MulticastWorker implements Runnable {
                     if (Peer.getProtocolVersion().equals(ENH_VERSION)) {
                         Thread.sleep(waitTime);
 
-                        if (StorageManager.getChunkReplication(header[3], chunkNo) < replicationDegree) {
-                            StorageManager.storeChunk(header[3], chunkNo, replicationDegree, body);
-
+                        if (StorageManager.getChunkReplication(header[3], chunkNo) < replicationDegree &&
+                                StorageManager.storeChunk(header[3], chunkNo, replicationDegree, body)) {
                             header[0] = "STORED";
                             header[1] = Peer.getProtocolVersion();
                             header[2] = Peer.getId();
