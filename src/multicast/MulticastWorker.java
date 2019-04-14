@@ -10,6 +10,9 @@ import java.util.AbstractMap;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Worker responsible for processing a message received in one of the multicast channels
+ */
 public class MulticastWorker implements Runnable {
     private static final String ENH_VERSION = "2.0";
     private static final ConcurrentHashMap<String, Object> flagMap = new ConcurrentHashMap<>();
@@ -19,6 +22,11 @@ public class MulticastWorker implements Runnable {
     private String[] header;
     private byte[] body;
 
+    /**
+     * Constructor of a worker to process a message
+     *
+     * @param msg Message contents (Pair containing the header fields and the body)
+     */
     MulticastWorker(AbstractMap.SimpleImmutableEntry<String[], byte[]> msg) {
         this.header = msg.getKey();
         this.body = msg.getValue();
@@ -26,6 +34,9 @@ public class MulticastWorker implements Runnable {
         //System.out.println("->" + Arrays.toString(header));
     }
 
+    /**
+     * Implements the Worker behavior, identifying the message type and processing it accordingly
+     */
     @Override
     public void run() {
         try {

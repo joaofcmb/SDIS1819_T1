@@ -4,6 +4,9 @@ import storage.RestoreManager;
 
 import java.util.concurrent.Callable;
 
+/**
+ * Worker of the Restore protocol, responsible for the restore of a single chunk
+ */
 public class RestoreWorker implements Callable<byte[]> {
     private final int INIT_WAIT_TIME = 1000;
 
@@ -13,11 +16,22 @@ public class RestoreWorker implements Callable<byte[]> {
     private final String fileId;
     private final int chunkNo;
 
+    /**
+     * Constructor of the chunk restore worker, initializing it with the needed values
+     *
+     * @param fileId Id of the chunk's file
+     * @param chunkNo Id of the chunk
+     */
     public RestoreWorker(String fileId, int chunkNo) {
         this.fileId = fileId;
         this.chunkNo = chunkNo;
     }
 
+    /**
+     * Method implementing the actions performed by the worker to execute the chunk restore protocol
+     *
+     * @return Binary content of the restored chunk.
+     */
     @Override
     public byte[] call() {
         int waitTime = INIT_WAIT_TIME;

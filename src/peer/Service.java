@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-// TODO use exception throwing on RMI for better error display for client
-
+/**
+ * Class responsible for RMI on the Peer side, performing the actions documented at ClientInterface
+ *
+ * @see ClientInterface
+ */
 public class Service implements ClientInterface {
     @Override
     public boolean backup(String path, int replicationDegree) {

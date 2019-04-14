@@ -9,13 +9,29 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+/**
+ * Class containing the information related to a chunk stored on the peer
+ *
+ * It is responsible for accessing the content and updating it.
+ */
 public class ChunkInfo implements Comparable<ChunkInfo> {
     private final File chunkFile;
     private final File infoFile;
 
     private final int replicationDegree;
+    private int redundancy; // Represents the difference between the perceived and desired replication of the chunk
 
-    private int redundancy;
+    /**
+     * Constructor handling the initial information of a chunk and storing it appropriately
+     *
+     * @param fileId Id of the file
+     * @param chunkNo Id of the chunk
+     * @param replication Perceived replication of the chunk
+     * @param replicationDegree Desired replication of the chunk
+     * @param body Contents of the chunk
+     *
+     * @throws IOException on failure to write data on disk
+     */
     public ChunkInfo(String fileId, int chunkNo, int replication, int replicationDegree, byte[] body) throws IOException {
         this.chunkFile = new File("./peer" + Peer.getId() + "/backup/" + fileId + "/chk" + chunkNo);
         this.chunkFile.getParentFile().mkdirs();
@@ -41,6 +57,11 @@ public class ChunkInfo implements Comparable<ChunkInfo> {
         }
     }
 
+    /**
+     * Increments the perceived replication of this chunk
+     *
+     * @throws IOException on failure to update data on disk
+     */
     public void incReplication() throws IOException {
         synchronized (infoFile) {
             int replication, desired;
@@ -58,6 +79,11 @@ public class ChunkInfo implements Comparable<ChunkInfo> {
         }
     }
 
+    /**
+     * Decrements the perceived replication of this chunk
+     *
+     * @throws IOException on failure to update data on disk
+     */
     public void decReplication() throws IOException {
         int replication, desired;
 
@@ -75,6 +101,13 @@ public class ChunkInfo implements Comparable<ChunkInfo> {
         }
     }
 
+    /**
+     * Retrieves the contents of this chunk
+     *
+     * @return Binary content of the chunk
+     *
+     * @throws IOException on failure to read the data from disk
+     */
     public byte[] getChunk() throws IOException {
         synchronized (chunkFile) {
             try (FileInputStream fis = new FileInputStream(chunkFile)) {
@@ -85,11 +118,21 @@ public class ChunkInfo implements Comparable<ChunkInfo> {
         }
     }
 
+    /**
+     * Deletes the data of this chunk on disk
+     */
     public void delete() {
         this.chunkFile.delete();
         this.infoFile.delete();
     }
 
+    /**
+     * Retrieves the perceived replication of this chunk
+     *
+     * @return Perceived replication of the chunk
+     *
+     * @throws IOException on failure to read the data from disk
+     */
     public int getReplication() throws IOException {
         synchronized (infoFile) {
             try (Scanner s = new Scanner(infoFile)) {
@@ -116,16 +159,21 @@ public class ChunkInfo implements Comparable<ChunkInfo> {
         return replicationDegree;
     }
 
+    /**
+     * Compares two stored chunks to determine the deletion priority during a storage reclaim
+     *
+     * @param o ChunkInfo being compared
+     *
+     * @return Comparison between this and the target ChunkInfo
+     *
+     * @see Comparable
+     */
     @Override
     public synchronized int compareTo(ChunkInfo o) {
         int r1 = this.getRedundancy(), r2 = o.getRedundancy();
 
         if      (r1 > r2)   return -1;
-        else if (r2 < r1)   return 1;
-        else {
-            if      (this.replicationDegree > o.replicationDegree)   return -1;
-            else if (this.replicationDegree < o.replicationDegree)   return 1;
-            else                                                     return 0;
-        }
+        else if (r1 < r2)   return 1;
+        else                return Integer.compare(o.replicationDegree, this.replicationDegree);
     }
 }
