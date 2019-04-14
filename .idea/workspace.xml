@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5b529179-4a03-4c01-9a89-202f8efc85f6" name="Default Changelist" comment="k">
-      <change afterPath="$PROJECT_DIR$/compile.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/compile.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/client/TestApp.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/client/TestApp.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastInterface.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastThread.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastWorker.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/multicast/MulticastWorker.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/BackupWorker.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/BackupWorker.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/Peer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/Peer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/RestoreWorker.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/RestoreWorker.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/Service.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/peer/Service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/ChunkInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/ChunkInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/FileInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/FileInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/RestoreManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/RestoreManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/StorageManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/production/SDIS1819_T1/storage/StorageManager.class" afterDir="false" />
-    </list>
+    <list default="true" id="5b529179-4a03-4c01-9a89-202f8efc85f6" name="Default Changelist" comment="k" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,20 +77,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/compile.sh">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="68">
               <caret line="4" column="35" lean-forward="true" selection-start-line="4" selection-start-column="35" selection-end-line="4" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/compile.bat">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="30" selection-start-line="2" selection-start-column="30" selection-end-line="2" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -372,12 +347,12 @@
       <workItem from="1555054027999" duration="4567000" />
       <workItem from="1555082453845" duration="7644000" />
       <workItem from="1555162806501" duration="4357000" />
-      <workItem from="1555253542416" duration="8873000" />
+      <workItem from="1555253542416" duration="9474000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="166536000" />
+    <option name="totallyTimeSpent" value="167137000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -390,7 +365,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25746268" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -716,17 +690,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/compile.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="35" lean-forward="true" selection-start-line="4" selection-start-column="35" selection-end-line="4" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/compile.bat">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="30" selection-start-line="2" selection-start-column="30" selection-end-line="2" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/compile.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="35" lean-forward="true" selection-start-line="4" selection-start-column="35" selection-end-line="4" selection-end-column="35" />
         </state>
       </provider>
     </entry>
