@@ -64,9 +64,13 @@ public class RestoreManager {
      * @param fileId Id of the file
      * @param chunkNo Id of the chunk
      * @param body Binary content of the chunk
+     *
      */
     public static void putChunk(String fileId, int chunkNo, byte[] body) {
-        chunkMap.replace(fileId + chunkNo, Optional.of(body));
+        try {
+            chunkMap.replace(fileId + chunkNo, Optional.of(body));
+        } catch( NullPointerException ignored) {
+        }
     }
 
     /**

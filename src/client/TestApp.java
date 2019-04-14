@@ -38,7 +38,7 @@ public class TestApp {
                     break;
                 case "RECLAIM":
                     if (stub.reclaim(Double.parseDouble(args[2])))
-                        System.out.println("Reclaim command was successful (Max Storage: " + args[2] + ").");
+                        System.out.println("Reclaim command was successful (Max Storage: " + args[2] + " KBytes).");
                     else
                         System.out.println("ERROR: Reclaim command has failed.");
                     break;
