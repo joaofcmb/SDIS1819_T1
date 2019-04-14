@@ -1,8 +1,10 @@
-#Distributed Backup Service
+## Distributed Backup Service
 
 The project was developed using InteliJ IDEA. The project can be viewed and compiled using this IDE.
 However, the project is already precompiled and, if necessary for java compatibility reasons, can be
 compiled by running the `compile.sh` script.
+
+---
 
 To run the project, follow these steps (All following scripts are in .bat or .sh:
 
