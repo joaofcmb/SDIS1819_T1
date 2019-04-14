@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5b529179-4a03-4c01-9a89-202f8efc85f6" name="Default Changelist" comment="k">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/ClientInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/ClientInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/TestApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/TestApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/multicast/MulticastInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/multicast/MulticastInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/multicast/MulticastThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/multicast/MulticastThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/multicast/MulticastWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/multicast/MulticastWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/peer/BackupWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/peer/BackupWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/peer/Peer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/peer/Peer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/peer/RestoreWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/peer/RestoreWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/peer/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/peer/Service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/storage/ChunkInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/ChunkInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/storage/FileInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/FileInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/storage/RestoreManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/RestoreManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/storage/StorageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/StorageManager.java" afterDir="false" />
-    </list>
+    <list default="true" id="5b529179-4a03-4c01-9a89-202f8efc85f6" name="Default Changelist" comment="k" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -351,12 +336,12 @@
       <workItem from="1555054027999" duration="4567000" />
       <workItem from="1555082453845" duration="7644000" />
       <workItem from="1555162806501" duration="4357000" />
-      <workItem from="1555253542416" duration="7769000" />
+      <workItem from="1555253542416" duration="8205000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="165432000" />
+    <option name="totallyTimeSpent" value="165868000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
